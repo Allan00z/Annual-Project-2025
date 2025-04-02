@@ -3,9 +3,6 @@ import React from "react";
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-base-100 font-sans">
-      {/* Navbar */}
-
-
       {/* Hero Section */}
       <section className="container mx-auto flex flex-col md:flex-row items-center py-12 px-6">
         <div className="md:w-1/2 flex justify-center">
