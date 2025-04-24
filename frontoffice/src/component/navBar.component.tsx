@@ -11,7 +11,7 @@ export const NavBar = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
-        <nav className="flex justify-between items-center p-6 shadow-md bg-white">
+        <nav className="flex justify-around items-center p-6 shadow-md bg-white sticky">
             <a href="/">
                 <Image src={Logo} alt="Logo" className="w-62" />
             </a>
