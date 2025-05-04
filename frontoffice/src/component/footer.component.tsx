@@ -4,7 +4,7 @@ import Logo from "../medias/images/crochet-bg_files/logo-blanc.svg";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#303028] text-white py-12 ">
+    <footer className="bg-[#303028] text-white py-12 rounded-xl">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
         <div className="md:w-1/3 text-center md:text-left">
           <h3 className="text-lg font-bold">Besoin d’aide ?</h3>
@@ -16,7 +16,7 @@ const Footer = () => {
           </ul>
         </div>
         <div className="md:w-1/3 text-center">
-          <Image src={Logo} alt="Audelweiss Logo" className="mx-auto w-40 mb-4" />
+          <Image src={Logo} alt="Audelweiss Logo" className="mx-auto w-40 mb-4 p-5" />
           <p className="text-gray-400 text-sm">
             Chaque pièce est imaginée et réalisée à la main dans les Hautes-Alpes, avec passion et créativité. Un mélange d’authenticité, d’expérimentation et d’énergie positive pour apporter douceur et harmonie à votre quotidien.
           </p>
