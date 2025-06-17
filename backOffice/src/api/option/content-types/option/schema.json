@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "options",
+  "info": {
+    "singularName": "option",
+    "pluralName": "options",
+    "displayName": "Option"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "priceModifier": {
+      "type": "integer"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product.product",
+      "inversedBy": "option"
+    }
+  }
+}

@@ -1,61 +1,77 @@
-# 🚀 Getting started with Strapi
+# Back Office - Guide d'Installation
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+## Prérequis
 
-### `develop`
+Avant de commencer l'installation, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+- **Node.js** : Version 18.x à 22.x
+- **npm** : Version 6.0.0 ou supérieure
+- **PostgreSQL** : Base de données (version recommandée : 14.x ou supérieure)
 
+## Installation
+
+Suivez ces étapes pour installer et configurer le Back Office :
+
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/Allan00z/Annual-Project-2025.git
+cd Annual-Project-2025/backOffice
 ```
+
+### 2. Installer les dépendances
+
+```bash
+npm install
+```
+
+### 3. Configuration de la base de données
+
+Créez un fichier `.env` à la racine du dossier backOffice avec les informations de connexion à votre base de données PostgreSQL :
+
+```env
+HOST=0.0.0.0
+PORT=1337
+APP_KEYS=
+API_TOKEN_SALT=
+ADMIN_JWT_SECRET=
+TRANSFER_TOKEN_SALT=
+
+# Base de données
+DATABASE_CLIENT=postgres
+DATABASE_URL=
+DATABASE_SSL=false
+JWT_SECRET=
+GOOGLE_MAPS_API_KEY=
+```
+
+### 4. Exécuter les migrations (si nécessaire)
+
+Si des migrations de base de données sont nécessaires :
+
+```bash
+npm run strapi -- database:migrate
+```
+
+### 5. Démarrer le serveur en mode développement
+
+```bash
 npm run develop
-# or
-yarn develop
 ```
 
-### `start`
+L'application sera disponible à l'adresse `http://localhost:1337`.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+## Scripts disponibles
 
-```
-npm run start
-# or
-yarn start
-```
+- `npm run dev` ou `npm run develop` : Démarre le serveur en mode développement
+- `npm run build` : Compile l'application pour la production
+- `npm run start` : Démarre l'application en mode production
+- `npm run strapi` : Exécute des commandes Strapi
+- `npm run upgrade` : Met à jour Strapi vers la dernière version
+- `npm run upgrade:dry` : Simule une mise à jour sans l'appliquer
 
-### `build`
+## Plugins installés
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+- `@amicaldo/strapi-google-maps` : Intégration de Google Maps
+- `@strapi/plugin-documentation` : Documentation de l'API accessible via `/documentation`
+- `@strapi/plugin-users-permissions` : Gestion des utilisateurs et des permissions

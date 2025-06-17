@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "discounts",
+  "info": {
+    "singularName": "discount",
+    "pluralName": "discounts",
+    "displayName": "Discount"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "prix",
+        "pourcentage"
+      ]
+    },
+    "value": {
+      "type": "integer"
+    },
+    "startDate": {
+      "type": "datetime"
+    },
+    "endDate": {
+      "type": "datetime"
+    },
+    "code": {
+      "type": "string"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "discounts"
+    }
+  }
+}

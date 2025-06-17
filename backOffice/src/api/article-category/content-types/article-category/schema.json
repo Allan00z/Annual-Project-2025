@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "article_categories",
+  "info": {
+    "singularName": "article-category",
+    "pluralName": "article-categories",
+    "displayName": "ArticleCategory"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "articles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article.article",
+      "mappedBy": "article_category"
+    }
+  }
+}
