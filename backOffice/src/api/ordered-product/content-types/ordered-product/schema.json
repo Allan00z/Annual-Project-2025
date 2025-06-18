@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ordered_products",
+  "info": {
+    "singularName": "ordered-product",
+    "pluralName": "ordered-products",
+    "displayName": "OrderedProduct"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "quantity": {
+      "type": "integer"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "ordered_products"
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
+      "inversedBy": "ordered_products"
+    }
+  }
+}

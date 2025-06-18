@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "client": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::client.client",
+      "inversedBy": "orders"
+    },
+    "ordered_products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ordered-product.ordered-product",
+      "mappedBy": "order"
+    }
+  }
+}
