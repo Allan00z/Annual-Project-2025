@@ -3,7 +3,7 @@ import bonnet from "../../medias/images/crochet-bg_files/bonnet-avec-pompom.jpg.
 import montagne from "../../medias/images/crochet-bg_files/montagne.svg";
 import crochet from "../../medias/images/crochet-bg_files/crochet.svg";
 import reiki from "../../medias/images/crochet-bg_files/reiki.svg";
-import bandeaux from "../../medias/images/Boutique – Créations artisanales uniques faites à la main – Audelweiss Craft_files/bandeaux-300x300.jpg.webp";
+import bandeaux from "../../medias/images/Boutique/bandeaux-300x300.jpg.webp";
 import creatrice from "../../medias/images/crochet-bg_files/4b016c7372b5440180c5e265eed458d1-scaled.webp";
 
 export default function About() {

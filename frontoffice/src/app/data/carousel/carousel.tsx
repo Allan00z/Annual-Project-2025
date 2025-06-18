@@ -1,11 +1,11 @@
 
-import bandeauIntemporel from "../../../medias/images/Boutique – Créations artisanales uniques faites à la main – Audelweiss Craft_files/bandeaux-intemporels-recto-300x300.jpg.webp";
+import bandeauIntemporel from "../../../medias/images/Boutique/bandeaux-intemporels-recto-300x300.jpg.webp";
 import bandeaufantaisie from "../../../medias/images/crochet-bg_files/bandeaufantaisie-400x284.jpg.webp";
 import bandeauraye from "../../../medias/images/crochet-bg_files/bandeau-raye.jpg.webp";
-import chignon from "../../../medias/images/Boutique – Créations artisanales uniques faites à la main – Audelweiss Craft_files/PXL_20250317_133946446.MP_-300x300.jpg.webp";
+import chignon from "../../../medias/images/Boutique/PXL_20250317_133946446.MP_-300x300.jpg.webp";
 import bonnetpompon from "../../../medias/images/crochet-bg_files/bonnet-avec-pompom.jpg.webp";
 import bandeaux from "../../../medias/images/crochet-bg_files/bandeaux.jpg.webp";
-import roseEternelle from "../../../medias/images/Boutique – Créations artisanales uniques faites à la main – Audelweiss Craft_files/PXL_20250412_090716985.MP_-300x300.jpg.webp";
+import roseEternelle from "../../../medias/images/Boutique/PXL_20250412_090716985.MP_-300x300.jpg.webp";
 import cardigan from "../../../medias/images/crochet-bg_files/cardigan-400x284.jpg.webp";
 
 const products = [

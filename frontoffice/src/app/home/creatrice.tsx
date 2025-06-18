@@ -1,5 +1,5 @@
 import Image from "next/image";
-import bandeaux from "../../medias/images/Boutique – Créations artisanales uniques faites à la main – Audelweiss Craft_files/bandeaux-300x300.jpg.webp";
+import bandeaux from "../../medias/images/Boutique/bandeaux-300x300.jpg.webp";
 import creatrice from "../../medias/images/crochet-bg_files/4b016c7372b5440180c5e265eed458d1-scaled.webp";
 
 const Creatrice = () => {
