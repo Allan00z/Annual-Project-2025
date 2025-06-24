@@ -56,7 +56,7 @@ npm run strapi -- database:migrate
 ### 5. Démarrer le serveur en mode développement
 
 ```bash
-npm run develop
+npm run dev
 ```
 
 L'application sera disponible à l'adresse `http://localhost:1337`.

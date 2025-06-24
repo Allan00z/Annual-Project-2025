@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Technologie",
+    "description": "Articles sur les dernières innovations technologiques, gadgets et logiciels."
+  },
+  {
+    "name": "Mode de vie",
+    "description": "Conseils et astuces pour améliorer votre quotidien, bien-être et développement personnel."
+  },
+  {
+    "name": "News",
+    "description": "Informations récentes sur les événements importants et les tendances actuelles."
+  }
+]
