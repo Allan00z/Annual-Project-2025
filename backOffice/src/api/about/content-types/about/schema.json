@@ -1,0 +1,45 @@
+{
+  "kind": "singleType",
+  "collectionName": "abouts",
+  "info": {
+    "singularName": "about",
+    "pluralName": "abouts",
+    "displayName": "About"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "aboutMe": {
+      "type": "text"
+    },
+    "proBackground": {
+      "type": "text"
+    },
+    "aboutMeTitle": {
+      "type": "string"
+    },
+    "proBackgroundTitle": {
+      "type": "string"
+    },
+    "pro1Title": {
+      "type": "string"
+    },
+    "pro2Title": {
+      "type": "string"
+    },
+    "pro3Title": {
+      "type": "string"
+    },
+    "pro1": {
+      "type": "text"
+    },
+    "pro2": {
+      "type": "text"
+    },
+    "pro3": {
+      "type": "text"
+    }
+  }
+}

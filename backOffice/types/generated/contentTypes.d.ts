@@ -373,6 +373,40 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAboutAbout extends Struct.SingleTypeSchema {
+  collectionName: 'abouts';
+  info: {
+    displayName: 'About';
+    pluralName: 'abouts';
+    singularName: 'about';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    aboutMe: Schema.Attribute.Text;
+    aboutMeTitle: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::about.about'> &
+      Schema.Attribute.Private;
+    pro1: Schema.Attribute.Text;
+    pro1Title: Schema.Attribute.String;
+    pro2: Schema.Attribute.Text;
+    pro2Title: Schema.Attribute.String;
+    pro3: Schema.Attribute.Text;
+    pro3Title: Schema.Attribute.String;
+    proBackground: Schema.Attribute.Text;
+    proBackgroundTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiArticleCategoryArticleCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'article_categories';
@@ -1307,6 +1341,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::about.about': ApiAboutAbout;
       'api::article-category.article-category': ApiArticleCategoryArticleCategory;
       'api::article.article': ApiArticleArticle;
       'api::client.client': ApiClientClient;
