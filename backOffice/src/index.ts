@@ -70,6 +70,46 @@ export default {
           console.error('Error loading default Articles from JSON:', error);
         }
       }
+
+      // Check if About data exists, if not, create default data
+      const existingAbout = await strapi.db.query('api::about.about').findMany();
+      if (existingAbout.length === 0) {
+        console.log('Loading default About data from JSON...');
+        const aboutPath = path.join(__dirname, 'data', 'about.json');
+        try {
+          const aboutData = JSON.parse(fs.readFileSync(aboutPath, 'utf8'));
+          await strapi.entityService.create('api::about.about', {
+            data: {
+              ...aboutData,
+              publishedAt: new Date()
+            }
+          });
+          console.log('Default About data created successfully');
+        } catch (error) {
+          console.error('Error loading default About from JSON:', error);
+        }
+      }
+
+      // Check if Question data exists, if not, create default data
+      const existingQuestion = await strapi.db.query('api::question.question').findMany();
+      if (existingQuestion.length === 0) {
+        console.log('Loading default Question data from JSON...');
+        const questionsPath = path.join(__dirname, 'data', 'questions.json');
+        try {
+          const questionsData = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
+          for (const question of questionsData) {
+            await strapi.entityService.create('api::question.question', {
+              data: {
+                ...question,
+                publishedAt: new Date()
+              }
+            });
+          }
+          console.log(`${questionsData.length} default Questions created successfully`);
+        } catch (error) {
+          console.error('Error loading default Questions from JSON:', error);
+        }
+      }
     };
 
     createDefaultData();
