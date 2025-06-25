@@ -3,12 +3,29 @@
 import Image from "next/image";
 import Logo from "../medias/logo/logoLongLarge.svg";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import LogoutButton from "./logout-button.component";
+import AuthService from "../app/services/auth.service";
+import Link from "next/link";
 
 export const NavBar = () => {
   const pathname = usePathname();
   const style = { color: "#e8a499" };
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(AuthService.isLoggedIn());
+
+    const handleStorageChange = () => {
+      setIsLoggedIn(AuthService.isLoggedIn());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   return (
     <nav className="flex justify-between items-center p-6 bg-white z-50 sticky top-0">
@@ -57,6 +74,19 @@ export const NavBar = () => {
             />
           </svg>
         </a>
+
+        {isLoggedIn ? (
+          <LogoutButton />
+        ) : (
+          <Link
+            href="/login"
+            className="btn btn-ghost btn-circle hidden md:flex items-center space-x-4 -translate-y-2"
+          >
+            <span className="material-symbols-outlined">
+              account_circle
+            </span>
+          </Link>
+        )}
       </div>
 
       <div className="flex items-center space-x-4 md:hidden">
@@ -138,6 +168,21 @@ export const NavBar = () => {
             <a href="/creations">CRÉATIONS</a>
             <a href="/about">À PROPOS</a>
             <a href="/blog">BLOG</a>
+
+            {isLoggedIn ? (
+              <div className="pt-4">
+                <LogoutButton />
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="btn btn-ghost btn-circle hidden md:flex items-center space-x-4 -translate-y-2"
+              >
+                <span className="material-symbols-outlined">
+                  account_circle
+                </span>
+              </Link>
+            )}
           </nav>
         </div>
       </div>
