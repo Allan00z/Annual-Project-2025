@@ -9,7 +9,8 @@ export default function Account() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('http://localhost:1338/api/articles');
+        const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+        const response = await fetch(`${STRAPI_URL}/api/articles`);
         
         if (!response.ok) {
           throw new Error(`Erreur HTTP: ${response.status}`);

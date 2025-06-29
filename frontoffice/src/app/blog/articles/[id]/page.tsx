@@ -47,10 +47,13 @@ export default function ArticlePage({ params }: Props) {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+
   useEffect(() => {
     async function fetchArticle() {
-      try {        setLoading(true);
-        const response = await fetch(`http://localhost:1338/api/articles/${id}?populate=*`);
+      try {        
+        setLoading(true);
+        const response = await fetch(`${STRAPI_URL}/api/articles/${id}?populate=*`);
         
         if (!response.ok) {
           throw new Error(`Erreur lors de la récupération de l'article (${response.status})`);
@@ -148,7 +151,7 @@ export default function ArticlePage({ params }: Props) {
         <div className="mb-8 mx-auto max-w-2xl">
           <Image
             src={article.image && article.image.url ? 
-              `http://localhost:1338${article.image.url}` : 
+              `${STRAPI_URL}${article.image.url}` : 
               pelote
             }
             alt={article.title}

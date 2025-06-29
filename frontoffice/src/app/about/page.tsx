@@ -34,8 +34,9 @@ interface ApiResponse {
  * @throws {Error} Si la requête échoue
  */
 async function getAboutData(): Promise<AboutData> {
+  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {
-    const res = await fetch("http://localhost:1338/api/about", {
+    const res = await fetch(`${STRAPI_URL}/api/about`, {
       cache: "no-store",
     });
 

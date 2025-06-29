@@ -27,7 +27,8 @@ export const AuthService = {
    * @returns Promise with the authentication response
    */
   login: async (identifier: string, password: string): Promise<AuthResponse> => {
-    const response = await fetch("http://localhost:1338/api/auth/local", {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/auth/local`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +61,8 @@ export const AuthService = {
    * @returns Promise with the authentication response
    */
   register: async (username: string, email: string, password: string): Promise<AuthResponse> => {
-    const response = await fetch("http://localhost:1338/api/auth/local/register", {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/auth/local/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,6 +101,67 @@ export const AuthService = {
     window.dispatchEvent(new Event("storage"));
   },
 
+  /**
+   * Request a password reset for the provided email
+   * @param email - The email address of the user
+   * @returns Promise with the response
+   */
+  forgotPassword: async (email: string): Promise<any> => {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Erreur lors de la demande de réinitialisation");
+    }
+
+    return data;
+  },
+
+  /**
+   * Reset the password using the provided code and new password
+   * @param code - The code received in the email
+   * @param password - The new password
+   * @param passwordConfirmation - Password confirmation
+   * @returns Promise with the response
+   */
+  resetPassword: async (code: string, password: string, passwordConfirmation: string): Promise<any> => {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code,
+        password,
+        passwordConfirmation,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Erreur lors de la réinitialisation du mot de passe");
+    }
+
+    // Store the JWT and user data in localStorage if returned
+    if (data.jwt) {
+      localStorage.setItem("jwt", data.jwt);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("storage"));
+    }
+
+    return data;
+  },
+  
   /**
    * Check if a user is logged in
    * @returns boolean indicating if the user is logged in

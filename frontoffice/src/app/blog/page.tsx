@@ -55,8 +55,9 @@ interface ArticlesResponse {
  */
 async function getArticles(page: number = 1, pageSize: number = 5, search?: string, categoryId?: number): Promise<ArticlesResponse> {
   try {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
     // Build the URL for fetching articles with pagination and optional filters
-    let url = `http://localhost:1338/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+    let url = `${STRAPI_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
     
     // Add search filter if present
     if (search) {
@@ -92,9 +93,10 @@ async function getArticles(page: number = 1, pageSize: number = 5, search?: stri
  * @return A promise that resolves to an array of article categories.
  */
 async function getCategories(): Promise<ArticleCategory[]> {
+  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {
     // Fetch article categories from the API
-    const response = await fetch("http://localhost:1338/api/article-categories", {
+    const response = await fetch(`${STRAPI_URL}/api/article-categories`, {
       cache: "no-store",
     });
 

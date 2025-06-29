@@ -2,8 +2,9 @@ import { Question, QuestionsResponse } from './types';
 import FaqClientComponent from './faq-client-component';
 
 async function getQuestions(): Promise<Question[]> {
+  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {
-    const response = await fetch('http://localhost:1338/api/questions', { 
+    const response = await fetch(`${STRAPI_URL}/api/questions`, { 
       cache: 'no-store' 
     });
     

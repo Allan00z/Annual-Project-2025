@@ -19,6 +19,7 @@
     "@strapi/plugin-cloud": "5.12.2",
     "@strapi/plugin-documentation": "^5.15.1",
     "@strapi/plugin-users-permissions": "^5.15.1",
+    "@strapi/provider-email-nodemailer": "^5.16.1",
     "@strapi/strapi": "^5.15.1",
     "@vitejs/plugin-react-swc": "^3.10.2",
     "esbuild": "^0.25.5",

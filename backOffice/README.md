@@ -42,7 +42,18 @@ DATABASE_CLIENT=postgres
 DATABASE_URL=
 DATABASE_SSL=false
 JWT_SECRET=
+
+# Google Maps API
 GOOGLE_MAPS_API_KEY=
+
+# Email
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=
+SMTP_PASSWORD=
+
+# Frontend URL
+FRONTEND_URL=http://localhost:3000
 ```
 
 ### 4. Exécuter les migrations (si nécessaire)
@@ -75,3 +86,4 @@ L'application sera disponible à l'adresse `http://localhost:1337`.
 - `@amicaldo/strapi-google-maps` : Intégration de Google Maps
 - `@strapi/plugin-documentation` : Documentation de l'API accessible via `/documentation`
 - `@strapi/plugin-users-permissions` : Gestion des utilisateurs et des permissions
+- `@strapi/provider-email-nodemailer` : Envoi d'e-mails via Nodemailer

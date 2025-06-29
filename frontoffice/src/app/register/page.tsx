@@ -31,7 +31,35 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await AuthService.register(username, email, password);
+      const authResponse = await AuthService.register(username, email, password);
+      
+      try {
+        const response = await fetch("/api/mail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authResponse.jwt}` // Ajouter le token JWT pour l'authentification
+          },
+          body: JSON.stringify({
+            type: "welcome",
+            data: {
+              email,
+              username
+            }
+          })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          console.log("Email de bienvenue envoyé avec succès", result);
+        } else {
+          console.error("Erreur lors de l'envoi de l'email de bienvenue:", result.error);
+        }
+      } catch (emailError) {
+        console.error("Erreur lors de l'envoi de l'email de bienvenue:", emailError);
+      }
+      
       router.push("/");
     } catch (error) {
       console.error("Erreur d'inscription:", error);
