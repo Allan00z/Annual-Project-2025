@@ -1,37 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import pelote from "../../medias/images/crochet-bg_files/0b0bc07c-1615-4152-b893-770a637929dc.webp";
-
-interface ArticleCategory {
-  id: number;
-  documentId: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-interface Article {
-  id: number;
-  documentId: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  description: string;
-  content: string;
-  readingTime: number;
-  article_category: ArticleCategory;
-  image?: {
-    url: string;
-    formats?: {
-      thumbnail?: {
-        url: string;
-      }
-    }
-  } | null;
-}
+import { ArticleCategory } from "../../models/article-category";
+import { Article } from "../../models/article";
 
 interface ArticlesResponse {
   data: Article[];
@@ -59,6 +30,9 @@ async function getArticles(page: number = 1, pageSize: number = 5, search?: stri
     // Build the URL for fetching articles with pagination and optional filters
     let url = `${STRAPI_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
     
+    // Add sort parameter to display newest articles first (by publishedAt or createdAt date)
+    url += `&sort[0]=publishedAt:desc`;
+    
     // Add search filter if present
     if (search) {
       url += `&filters[$or][0][title][$containsi]=${encodeURIComponent(search)}`;
@@ -81,7 +55,14 @@ async function getArticles(page: number = 1, pageSize: number = 5, search?: stri
 
     // Return the articles and pagination metadata
     const data = await response.json();
-    return data;
+    if (data.data) {
+      data.data = data.data.map((article: any) => ({
+        ...article,
+        documentId: article.documentId.toString()
+      }));
+    }
+    
+    return data as ArticlesResponse;
   } catch (error) {
     console.error("Erreur lors de la récupération des articles:", error);
     return { data: [], meta: { pagination: { page: 1, pageSize, pageCount: 0, total: 0 } } };

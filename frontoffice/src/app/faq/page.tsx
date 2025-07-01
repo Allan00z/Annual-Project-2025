@@ -1,5 +1,17 @@
-import { Question, QuestionsResponse } from './types';
+import { Question } from '../../models/question';
 import FaqClientComponent from './faq-client-component';
+
+export interface QuestionsResponse {
+  data: Question[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    }
+  }
+}
 
 async function getQuestions(): Promise<Question[]> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';

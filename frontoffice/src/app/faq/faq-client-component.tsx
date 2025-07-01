@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Question } from './types';
+import { Question } from '../../models/question';
 import FaqItem from './faq-item';
 
 interface FaqClientComponentProps {

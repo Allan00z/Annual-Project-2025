@@ -5,38 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import pelote from "../../../../medias/images/crochet-bg_files/0b0bc07c-1615-4152-b893-770a637929dc.webp";
-
-// Interface pour typer les catégories d'articles
-interface ArticleCategory {
-  id: number;
-  documentId: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
-interface Article {
-  id: number;
-  documentId: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  description: string;
-  content: string;
-  readingTime: number;
-  article_category: ArticleCategory;
-  image?: {
-    url: string;
-    formats?: {
-      thumbnail?: {
-        url: string;
-      }
-    }
-  } | null;
-}
+import { Article } from '../../../../models/article';
 
 interface Props {
   params: { id: string };
@@ -56,11 +25,12 @@ export default function ArticlePage({ params }: Props) {
         const response = await fetch(`${STRAPI_URL}/api/articles/${id}?populate=*`);
         
         if (!response.ok) {
-          throw new Error(`Erreur lors de la récupération de l'article (${response.status})`);
+          throw new Error(`Erreur lors de la récupération de l'article (${response.status}) ${id}`);
         }
         
         const { data } = await response.json();
-        setArticle(data);
+        const articleData: Article = data;
+        setArticle(articleData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Une erreur est survenue');
       } finally {
@@ -114,7 +84,7 @@ export default function ArticlePage({ params }: Props) {
   }
 
   // Formater la date de publication
-  const publishDate = new Date(article.publishedAt);
+  const publishDate = article.publishedAt ? new Date(article.publishedAt) : new Date();
   const formattedDate = new Intl.DateTimeFormat('fr-FR', {
     day: 'numeric',
     month: 'long',

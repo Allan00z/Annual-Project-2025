@@ -1,39 +1,22 @@
 import Image from "next/image";
+import type { About } from "../../models/about";
 import montagne from "../../medias/images/crochet-bg_files/montagne.svg";
 import crochet from "../../medias/images/crochet-bg_files/crochet.svg";
 import reiki from "../../medias/images/crochet-bg_files/reiki.svg";
 import bandeaux from "../../medias/images/Boutique/bandeaux-300x300.jpg.webp";
 import creatrice from "../../medias/images/crochet-bg_files/4b016c7372b5440180c5e265eed458d1-scaled.webp";
 
-interface AboutData {
-  id: number;
-  documentId: string;
-  aboutMe: string;
-  proBackground: string;
-  aboutMeTitle: string;
-  proBackgroundTitle: string;
-  pro1Title: string;
-  pro2Title: string;
-  pro3Title: string;
-  pro1: string;
-  pro2: string;
-  pro3: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-}
-
 interface ApiResponse {
-  data: AboutData;
+  data: About;
   meta: Record<string, any>;
 }
 
 /**
  * Get the "About" data from the API
- * @returns {Promise<AboutData>} Les données de la page "À propos"
+ * @returns {Promise<About>} Les données de la page "À propos"
  * @throws {Error} Si la requête échoue
  */
-async function getAboutData(): Promise<AboutData> {
+async function getAboutData(): Promise<About> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {
     const res = await fetch(`${STRAPI_URL}/api/about`, {
@@ -62,7 +45,7 @@ export default async function About() {
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-center md:text-left">
             {aboutData.aboutMeTitle}
           </h2>
-          {aboutData.aboutMe.split("\n\n").map((paragraph, index) => (
+          {aboutData.aboutMe.split("\n\n").map((paragraph: string, index: number) => (
             <p key={index} className="text-lg leading-relaxed text-justify">
               {paragraph}
             </p>
@@ -145,7 +128,7 @@ export default async function About() {
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-center md:text-left">
             {aboutData.proBackgroundTitle}
           </h2>
-          {aboutData.proBackground.split("\n\n").map((paragraph, index) => (
+          {aboutData.proBackground.split("\n\n").map((paragraph: string, index: number) => (
             <p key={index} className="text-lg leading-relaxed text-justify">
               {paragraph}
             </p>
