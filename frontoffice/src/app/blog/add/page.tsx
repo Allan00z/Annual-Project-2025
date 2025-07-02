@@ -29,7 +29,7 @@ export default function AddArticle() {
 
   const fetchCategories = async () => {
     try {
-      const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
+      const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
       const response = await fetch(`${STRAPI_URL}/api/article-categories`);
       
       if (!response.ok) {
@@ -56,7 +56,7 @@ export default function AddArticle() {
     setError(null);
     
     try {
-      const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
+      const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
       const jwt = document.cookie.split('; ').find(row => row.startsWith('jwt='))?.split('=')[1];
       
       const articleData = {

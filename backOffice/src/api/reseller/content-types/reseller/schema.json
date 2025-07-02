@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "resellers",
+  "info": {
+    "singularName": "reseller",
+    "pluralName": "resellers",
+    "displayName": "Reseller"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "address": {
+      "type": "customField",
+      "customField": "plugin::google-maps.location-picker"
+    },
+    "description": {
+      "type": "text"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}

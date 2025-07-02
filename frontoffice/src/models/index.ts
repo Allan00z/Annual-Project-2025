@@ -12,4 +12,5 @@ export * from './ordered-product';
 export * from './product';
 export * from './product-category';
 export * from './question';
+export * from './resseler';
 export * from './user';

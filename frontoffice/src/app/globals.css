@@ -123,6 +123,14 @@
   }
 }
 
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .flower {
   width: 200px; /* adjust to control the size */
   aspect-ratio: 1;
