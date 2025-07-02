@@ -133,7 +133,7 @@ export default async function About() {
               {paragraph}
             </p>
           ))}
-          <a href="/about">
+          <a href="https://audreyhossepian.fr" target="_blank">
             <button className="btn btn-primary mt-6 bg-black text-white border-black hover:bg-white hover:text-black transition">
               Découvrir mon site freelance
             </button>

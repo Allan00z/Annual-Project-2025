@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import pelote from "../../../../medias/images/crochet-bg_files/0b0bc07c-1615-4152-b893-770a637929dc.webp";
 import { Article } from '../../../../models/article';
+import AuthService from '../../../services/auth.service';
 
 interface Props {
   params: { id: string };
@@ -16,6 +17,7 @@ export default function ArticlePage({ params }: Props) {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
 
   useEffect(() => {
@@ -31,6 +33,13 @@ export default function ArticlePage({ params }: Props) {
         const { data } = await response.json();
         const articleData: Article = data;
         setArticle(articleData);
+        
+        const checkOwnerStatus = async () => {
+          const isOwner = await AuthService.checkUserRole("owner");
+          setIsOwner(isOwner);
+        };
+        
+        checkOwnerStatus();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Une erreur est survenue');
       } finally {
@@ -93,10 +102,25 @@ export default function ArticlePage({ params }: Props) {
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-      <Link href="/blog" className="text-pink-500 hover:text-pink-600 transition mb-8 inline-block">
-        ← Retour aux articles
-      </Link>
-        <article className="prose lg:prose-xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <Link href="/blog" className="text-pink-500 hover:text-pink-600 transition inline-block">
+          ← Retour aux articles
+        </Link>
+        
+        {isOwner && (
+          <Link 
+            href={`/blog/articles/${id}/edit`} 
+            className="inline-flex items-center px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-md transition"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Modifier l'article
+          </Link>
+        )}
+      </div>
+
+      <article className="prose lg:prose-xl mx-auto">
         {article.article_category && (
           <span className={`inline-block text-white text-xs font-medium px-3 py-1 rounded mb-4 ${
             article.article_category.name === "News" ? "bg-blue-600" :

@@ -3,6 +3,7 @@ import Link from "next/link";
 import pelote from "../../medias/images/crochet-bg_files/0b0bc07c-1615-4152-b893-770a637929dc.webp";
 import { ArticleCategory } from "../../models/article-category";
 import { Article } from "../../models/article";
+import { checkUserRole } from "../../app/services/auth.server-side.services";
 
 interface ArticlesResponse {
   data: Article[];
@@ -136,6 +137,9 @@ export default async function Blog({
   const articlesResponse = await getArticles(page, pageSize, search, categoryId);
   const categories = await getCategories();
   const { data: articles, meta } = articlesResponse;
+  
+  // Check if the current user is an owner using the JWT from cookies
+  const isOwner = await checkUserRole('owner');
 
   return (
     <section>
@@ -168,6 +172,20 @@ export default async function Blog({
             </div>
             {categoryId && <input type="hidden" name="category" value={categoryId} />}
           </form>
+          
+          {isOwner && (
+            <div className="w-full flex items-center md:w-auto">
+              <Link 
+                href="/blog/add" 
+                className="w-full md:w-auto flex items-center justify-center gap-1 bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium px-3 py-1 rounded-md transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                Ajouter un article
+              </Link>
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-2 items-center">
             <Link 

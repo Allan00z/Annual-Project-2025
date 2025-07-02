@@ -44,9 +44,14 @@ export const AuthService = {
     if (!response.ok) {
       throw new Error(data.error?.message || "Erreur lors de la connexion");
     }
+
+    // Store the JWT and user data in localStorage
     localStorage.setItem("jwt", data.jwt);
     localStorage.setItem("user", JSON.stringify(data.user));
-    
+
+    // Store the JWT in a cookie for server-side access
+    document.cookie = `jwt=${data.jwt}; path=/; max-age=3600 sec; SameSite=Lax Secure`;
+
     // Dispatch a storage event to notify other components
     window.dispatchEvent(new Event("storage"));
 
@@ -96,6 +101,9 @@ export const AuthService = {
   logout: (): void => {
     localStorage.removeItem("jwt");
     localStorage.removeItem("user");
+
+    // Remove the JWT cookie
+    document.cookie = "jwt=; path=/; max-age=0; SameSite=Lax Secure";
 
     // Dispatch a storage event to notify other components
     window.dispatchEvent(new Event("storage"));
@@ -205,6 +213,39 @@ export const AuthService = {
       return null;
     }
   },
+
+  /**
+   * Check if the current user has a specific role
+   * @param roleType - The type of role to check (owner, etc.)
+   * @returns Promise that resolves to true if the user has the role, false otherwise
+   */
+  checkUserRole: async (roleType: string | null = null): Promise<boolean> => {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const token = AuthService.getToken();
+    
+    if (!token) {
+      return false; // User is not logged in
+    }
+
+    try {
+      const response = await fetch(`${STRAPI_URL}/api/users/me?populate=role`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur lors de la récupération des informations utilisateur: ${response.status}`);
+      }
+
+      const userData = await response.json();
+      return userData.role?.type === roleType;
+    } catch (error) {
+      console.error("Erreur lors de la vérification du rôle utilisateur:", error);
+      return false;
+    }
+  }
 };
 
 export default AuthService;
