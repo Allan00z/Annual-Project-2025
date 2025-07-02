@@ -12,7 +12,7 @@ const Footer = () => {
             <li><a href="#" className="hover:text-orange-400">Points de vente physiques</a></li>
             <li><a href="#" className="hover:text-orange-400">Livraison</a></li>
             <li><a href="/faq" className="hover:text-orange-400">Foire aux questions</a></li>
-            <li><a href="#" className="hover:text-orange-400">Me contacter</a></li>
+            <li><a href="/contact" className="hover:text-orange-400">Me contacter</a></li>
           </ul>
         </div>
         <div className="md:w-1/3 text-center">

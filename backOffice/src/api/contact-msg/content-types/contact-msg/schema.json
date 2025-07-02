@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_msgs",
+  "info": {
+    "singularName": "contact-msg",
+    "pluralName": "contact-msgs",
+    "displayName": "ContactMsg"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "firstname": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "content": {
+      "type": "text"
+    }
+  }
+}

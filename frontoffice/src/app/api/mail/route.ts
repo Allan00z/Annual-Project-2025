@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Vérifier l'authentification
   const isAuthenticated = await checkAuth(request);
   if (!isAuthenticated) {
     return NextResponse.json(
@@ -26,14 +25,21 @@ export async function POST(request: NextRequest) {
     let result;
 
     switch (type) {
-      case 'welcome':
+      case 'welcome': {
         const { email, username } = data;
         result = await mailerService.sendWelcomeEmail(email, username);
         break;
-      case 'custom':
-        const { to, subject, html, attachments } = data;
-        result = await mailerService.sendEmail({ to, subject, html, attachments });
+      }
+      case 'contact': {
+        const { to: contactTo, message, originalMessage } = data;
+        result = await mailerService.sendContactResponseEmail(contactTo, message, originalMessage);
         break;
+      }
+      case 'custom': {
+        const { to: customTo, subject, html, attachments } = data;
+        result = await mailerService.sendEmail({ to: customTo, subject, html, attachments });
+        break;
+      }
       default:
         return NextResponse.json(
           { error: 'Type d\'email non reconnu' },

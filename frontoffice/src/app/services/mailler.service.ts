@@ -101,7 +101,43 @@ class MailerService {
 
     return this.sendEmail({ to, subject, html });
   }
+
+  async sendContactResponseEmail(to: string, message: string, originalMessage?: string): Promise<nodemailer.SentMessageInfo> {
+    const subject = 'Réponse à votre message';
+    const html = `
+      <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333333; line-height: 1.5;">
+        <!-- En-tête avec logo stylisé -->
+        <div style="text-align: center; padding: 20px 0; background-color: #ffffff; border-bottom: 3px solid #e8a499;">
+          <h1 style="color: #e8a499; font-size: 28px; margin: 0; font-weight: 600;">AUDELWEISS</h1>
+        </div>
+        
+        <!-- Corps du mail -->
+        <div style="background-color: #ffffff; padding: 30px 20px; border-radius: 5px; margin-top: 20px;">
+          <h2 style="color: #333333; font-size: 22px; margin: 0 0 20px 0;">Réponse à votre message</h2>
+          
+          <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #e8a499; margin-bottom: 20px;">
+            <h4 style="color: #666; margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase;">Votre message original :</h4>
+            <p style="margin: 0; color: #666; font-style: italic;">${originalMessage || 'Message non disponible'}</p>
+          </div>
+          
+          <div style="margin: 20px 0;">
+            <h4 style="color: #333; margin: 0 0 10px 0;">Notre réponse :</h4>
+            <div style="color: #333; white-space: pre-line;">${message}</div>
+          </div>
+          
+          <p style="margin-top: 30px;">Cordialement,<br><strong>L'équipe Audelweiss</strong></p>
+        </div>
+        
+        <!-- Pied de page -->
+        <div style="text-align: center; padding: 20px; color: #777777; font-size: 14px; margin-top: 20px; border-top: 1px solid #eeeeee;">
+          <p>Pour toute question supplémentaire, n'hésitez pas à nous recontacter.</p>
+          <p><strong>L'équipe Audelweiss</strong></p>
+        </div>
+      </div>
+    `;
+
+    return this.sendEmail({ to, subject, html });
+  }
 }
 
-// Création d'une instance unique du service
 export const mailerService = new MailerService();

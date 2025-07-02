@@ -548,6 +548,37 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiContactMsgContactMsg extends Struct.CollectionTypeSchema {
+  collectionName: 'contact_msgs';
+  info: {
+    displayName: 'ContactMsg';
+    pluralName: 'contact-msgs';
+    singularName: 'contact-msg';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    firstname: Schema.Attribute.String;
+    lastname: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-msg.contact-msg'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiDiscountDiscount extends Struct.CollectionTypeSchema {
   collectionName: 'discounts';
   info: {
@@ -1375,6 +1406,7 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::client.client': ApiClientClient;
       'api::comment.comment': ApiCommentComment;
+      'api::contact-msg.contact-msg': ApiContactMsgContactMsg;
       'api::discount.discount': ApiDiscountDiscount;
       'api::feedback.feedback': ApiFeedbackFeedback;
       'api::option.option': ApiOptionOption;

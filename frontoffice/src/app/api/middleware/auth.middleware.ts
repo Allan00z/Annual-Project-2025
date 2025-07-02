@@ -25,10 +25,17 @@ export async function middleware(request: NextRequest) {
 export const checkOrigin = (request: NextRequest) => {
   const origin = request.headers.get('origin');
   const referer = request.headers.get('referer');
+  const host = request.headers.get('host');
 
   if (!APP_URL) {
     console.error('NEXT_PUBLIC_APP_URL non défini');
     return false;
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    if (host && (host.includes('localhost') || host.includes('127.0.0.1'))) {
+      return true;
+    }
   }
 
   if ((origin && origin === APP_URL) || (referer && referer.startsWith(APP_URL))) {
