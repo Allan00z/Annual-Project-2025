@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "cgvs",
+  "info": {
+    "singularName": "cgv",
+    "pluralName": "cgvs",
+    "displayName": "CGV"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sections": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::section.section"
+    }
+  }
+}
