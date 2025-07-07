@@ -25,11 +25,6 @@ export async function POST(request: NextRequest) {
     let result;
 
     switch (type) {
-      case 'welcome': {
-        const { email, username } = data;
-        result = await mailerService.sendWelcomeEmail(email, username);
-        break;
-      }
       case 'contact': {
         const { to: contactTo, message, originalMessage } = data;
         result = await mailerService.sendContactResponseEmail(contactTo, message, originalMessage);

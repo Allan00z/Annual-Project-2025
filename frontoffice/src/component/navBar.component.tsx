@@ -4,7 +4,7 @@ import Image from "next/image";
 import Logo from "../medias/logo/logoLongLarge.svg";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import LogoutButton from "./logout-button.component";
+import LogoutButton from "./account-button.component";
 import AuthService from "../app/services/auth.service";
 import Link from "next/link";
 

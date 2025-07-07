@@ -1,5 +1,7 @@
 "use client";
 
+import { validatePassword } from "../utils/password-validator";
+
 export interface User {
   id: number;
   documentId: string;
@@ -67,6 +69,12 @@ export const AuthService = {
    */
   register: async (username: string, email: string, password: string): Promise<AuthResponse> => {
     const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      throw new Error(`Mot de passe invalide: ${passwordValidation.errors.join(', ')}`);
+    }
+    
     const response = await fetch(`${STRAPI_URL}/api/auth/local/register`, {
       method: "POST",
       headers: {
@@ -85,12 +93,23 @@ export const AuthService = {
       throw new Error(data.error?.message || "Erreur lors de l'inscription");
     }
 
-    // Store the JWT and user data in localStorage
-    localStorage.setItem("jwt", data.jwt);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    try {
+      const confirmationResponse = await fetch(`${STRAPI_URL}/auth/send-email-confirmation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      });
 
-    // Dispatch a storage event to notify other components
-    window.dispatchEvent(new Event("storage"));
+      if (!confirmationResponse.ok) {
+        console.error("Erreur lors de l'envoi de l'email de confirmation");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de l'email de confirmation:", error);
+    }
 
     return data;
   },
@@ -142,6 +161,12 @@ export const AuthService = {
    */
   resetPassword: async (code: string, password: string, passwordConfirmation: string): Promise<any> => {
     const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      throw new Error(`Mot de passe invalide: ${passwordValidation.errors.join(', ')}`);
+    }
+    
     const response = await fetch(`${STRAPI_URL}/api/auth/reset-password`, {
       method: "POST",
       headers: {
@@ -245,6 +270,57 @@ export const AuthService = {
       console.error("Erreur lors de la vérification du rôle utilisateur:", error);
       return false;
     }
+  },
+
+  /**
+   * Change the password for the current user
+   * @param currentPassword - The current password
+   * @param password - The new password
+   * @param passwordConfirmation - Password confirmation
+   * @returns Promise with the response
+   */
+  changePassword: async (currentPassword: string, password: string, passwordConfirmation: string): Promise<any> => {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const token = AuthService.getToken();
+    
+    if (!token) {
+      throw new Error("Vous devez être connecté pour changer votre mot de passe");
+    }
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      throw new Error(`Nouveau mot de passe invalide: ${passwordValidation.errors.join(', ')}`);
+    }
+
+    const response = await fetch(`${STRAPI_URL}/api/auth/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        currentPassword,
+        password,
+        passwordConfirmation,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Erreur lors du changement du mot de passe");
+    }
+
+    if (data.jwt) {
+      localStorage.setItem("jwt", data.jwt);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      
+      document.cookie = `jwt=${data.jwt}; path=/; max-age=3600 sec; SameSite=Lax Secure`;
+      
+      window.dispatchEvent(new Event("storage"));
+    }
+
+    return data;
   }
 };
 

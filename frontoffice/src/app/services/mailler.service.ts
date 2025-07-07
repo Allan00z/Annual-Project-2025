@@ -55,53 +55,6 @@ class MailerService {
     }
   }
 
-  /**
-   * Sends a welcome email to a new user
-   * @param to Email address of the recipient
-   * @param username Username of the new user
-   * @returns Promise with the result of the email sending
-   */
-  async sendWelcomeEmail(to: string, username: string): Promise<nodemailer.SentMessageInfo> {
-    const subject = 'Bienvenue sur Audelweiss';
-    const html = `
-      <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333333; line-height: 1.5;">
-        <!-- En-tête avec logo stylisé -->
-        <div style="text-align: center; padding: 20px 0; background-color: #ffffff; border-bottom: 3px solid #e8a499;">
-          <h1 style="color: #e8a499; font-size: 28px; margin: 0; font-weight: 600;">AUDELWEISS</h1>
-        </div>
-        
-        <!-- Corps du mail -->
-        <div style="background-color: #ffffff; padding: 30px 20px; border-radius: 5px; margin-top: 20px;">
-          <h2 style="color: #333333; font-size: 22px; margin: 0 0 20px 0;">Bienvenue, ${username}!</h2>
-          <p>Merci de vous être inscrit sur Audelweiss.</p>
-          <p>Vous pouvez maintenant profiter de tous nos services et découvrir notre sélection de produits.</p>
-          
-          <!-- Bouton de connexion stylisé aux couleurs du site -->
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/login" 
-               style="background-color: #e8a499; 
-                      color: white; 
-                      padding: 12px 25px; 
-                      text-decoration: none; 
-                      border-radius: 5px; 
-                      font-weight: 600;
-                      display: inline-block;">CONNECTEZ-VOUS</a>
-          </div>
-          
-          <p>À bientôt sur Audelweiss !</p>
-        </div>
-        
-        <!-- Pied de page -->
-        <div style="text-align: center; padding: 20px; color: #777777; font-size: 14px; margin-top: 20px; border-top: 1px solid #eeeeee;">
-          <p><strong>L'équipe Audelweiss</strong></p>
-          <p>Pour toute question, n'hésitez pas à nous contacter.</p>
-        </div>
-      </div>
-    `;
-
-    return this.sendEmail({ to, subject, html });
-  }
-
   async sendContactResponseEmail(to: string, message: string, originalMessage?: string): Promise<nodemailer.SentMessageInfo> {
     const subject = 'Réponse à votre message';
     const html = `

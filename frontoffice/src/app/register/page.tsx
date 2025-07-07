@@ -4,6 +4,8 @@ import { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthService from "../services/auth.service";
+import PasswordStrengthIndicator from "../component/PasswordStrengthIndicator";
+import { validatePassword } from "../utils/password-validator";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -11,6 +13,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -22,9 +25,18 @@ export default function Register() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
     if (password !== confirmPassword) {
       setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setError(`Mot de passe invalide: ${passwordValidation.errors.join(", ")}`);
       return;
     }
 
@@ -32,35 +44,7 @@ export default function Register() {
 
     try {
       const authResponse = await AuthService.register(username, email, password);
-      
-      try {
-        const response = await fetch("/api/mail", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${authResponse.jwt}` // Ajouter le token JWT pour l'authentification
-          },
-          body: JSON.stringify({
-            type: "welcome",
-            data: {
-              email,
-              username
-            }
-          })
-        });
-
-        const result = await response.json();
-        
-        if (response.ok) {
-          console.log("Email de bienvenue envoyé avec succès", result);
-        } else {
-          console.error("Erreur lors de l'envoi de l'email de bienvenue:", result.error);
-        }
-      } catch (emailError) {
-        console.error("Erreur lors de l'envoi de l'email de bienvenue:", emailError);
-      }
-      
-      router.push("/");
+      setSuccess("Inscription réussie ! Un email de confirmation a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception.");
     } catch (error) {
       console.error("Erreur d'inscription:", error);
       setError(
@@ -86,6 +70,12 @@ export default function Register() {
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
             <span className="block sm:inline">{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <span className="block sm:inline">{success}</span>
           </div>
         )}
 
@@ -133,6 +123,7 @@ export default function Register() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#f7c0a6]"
               placeholder="Entrez votre mot de passe"
             />
+            <PasswordStrengthIndicator password={password} />
           </div>
 
           <div>
