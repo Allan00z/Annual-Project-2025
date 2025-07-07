@@ -35,8 +35,8 @@ export const NavBar = () => {
 
       <div className="space-x-6 hidden md:flex">
         <a
-          href="/home"
-          style={pathname === "/home" ? style : {}}
+          href="/"
+          style={pathname === "/" ? style : {}}
           className="text-primary"
         >
           ACCUEIL
