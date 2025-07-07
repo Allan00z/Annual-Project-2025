@@ -1,0 +1,26 @@
+[
+    {
+        "name": "June_ink",
+        "address": {
+            "address": "",
+            "geohash": "u0927jnqvd21",
+            "coordinates": {
+                "lat": 47.8850821398776,
+                "lng": 1.8984675407409668
+            }
+    },
+        "description": "Concept store d’une tatoueuse, mais surtout artiste créative et engagée au cœur des Hautes-Alpes, June_Ink met en avant l’artisanat local avec une sélection pointue de créateurs. Tu y trouveras quelques-unes de mes pièces aux côtés de belles découvertes."
+    },
+    {
+        "name": "O douceurs alpine",
+        "address": {
+            "address": "",
+            "geohash": "gbquu9v8t40p",
+            "coordinates": {
+                "lat": 47.25092176350593,
+                "lng": -1.552290916442871
+            }
+        },
+        "description": "Boutique chaleureuse mêlant gourmandises locales et produits artisanaux. Mes créations y trouvent leur place dans un univers doux et authentique, fidèle à l’esprit des Hautes-Alpes"
+    }
+]

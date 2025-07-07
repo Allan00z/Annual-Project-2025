@@ -1,0 +1,44 @@
+{
+  "sections": [
+    {
+      "title": "1. Responsable du traitement des données",
+      "content": "Le responsable du traitement des données personnelles est :\nNom : Audrey HOSSEPIAN\nEmail de contact : contact[@]audelweiss.fr",
+      "order": 0
+    },
+    {
+      "title": "2. Données collectées",
+      "content": "Nous collectons différents types de données personnelles, selon vos interactions avec le site :\n\n- Lors de l'achat sur la boutique en ligne : Nom, prénom, adresse de livraison, adresse email, numéro de téléphone, informations de paiement (gérées par un prestataire tiers sécurisé).\nPour la newsletter : Prénom et adresse email.\n- Pour les commentaires sur le blog : Nom (ou pseudo), adresse email, contenu du commentaire.\n- Analyses de trafic : Données anonymisées collectées via Google Analytics (adresse IP anonymisée, pages visitées, temps de visite, etc.).",
+      "order": 1
+    },
+    {
+      "title": "3. Finalités du traitement",
+      "content": "Vos données sont collectées pour les raisons suivantes :\n\n- Traitement et suivi des commandes sur la boutique en ligne.\n- Envoi d'informations et d'offres via la newsletter, si vous y avez consenti.\n- Gestion des commentaires sur le blog.\nAnalyse de la fréquentation du site via Google Analytics afin d'améliorer l'expérience utilisateur et les performances du site.\n- Réponses aux demandes envoyées via les formulaires de contact.",
+      "order": 2
+    },
+    {
+      "title": "4. Partage des données",
+      "content": "Nous ne vendons ni ne partageons vos données personnelles avec des tiers.\nToutefois, certaines données peuvent être transférées aux prestataires suivants :\n\n- Brevo (anciennement Sendinblue) pour la gestion de la newsletter.\n- Google Analytics pour les analyses de trafic (données anonymisées).",
+      "order": 3
+    },
+    {
+      "title": "5. Durée de conservation des données",
+      "content": "Les données personnelles sont conservées pendant les durées suivantes :\n\n- Données relatives aux commandes : conservation pendant la durée légale de 5 ans à des fins comptables.\n- Données de contact et d'abonnement à la newsletter : 3 ans après la dernière interaction (ou jusqu'à ce que vous vous désinscriviez).\n- Données des commentaires du blog : conservées tant que le commentaire reste visible sur le site.",
+      "order": 4
+    },
+    {
+      "title": "6. Vos droits",
+      "content": "Conformément au RGPD, vous disposez des droits suivants concernant vos données personnelles :\n\n- Droit d'accès : Vous pouvez demander à consulter les données vous concernant.\n- Droit de rectification : Vous pouvez demander la correction de données inexactes.\n- Droit à l'effacement : Vous pouvez demander la suppression de vos données personnelles.\n- Droit d'opposition : Vous pouvez vous opposer au traitement de vos données, notamment pour l'envoi de newsletters.\n- Droit à la portabilité : Vous pouvez demander à recevoir vos données sous un format lisible par machine.",
+      "order": 5
+    },
+    {
+      "title": "7. Sécurité des données",
+      "content": "Nous mettons en œuvre des mesures techniques et organisationnelles adaptées pour protéger vos données contre tout accès non autorisé, perte, destruction ou modification.",
+      "order": 6
+    },
+    {
+      "title": "8. Cookies et suivi",
+      "content": "Nous utilisons des cookies pour améliorer votre expérience sur le site, personnaliser le contenu et analyser notre trafic. Vous pouvez gérer vos préférences de cookies via le bandeau de consentement qui apparaît lors de votre première visite.\nLes cookies utilisés incluent notamment ceux de :\n\n- Google Analytics (analyse du trafic).\n- Cookies nécessaires au bon fonctionnement du site (panier, connexion au compte, etc.).",
+      "order": 7
+    }
+  ]
+}

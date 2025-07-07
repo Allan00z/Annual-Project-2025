@@ -1,0 +1,39 @@
+{
+  "sections": [
+    {
+      "title": "1. Éditeur du site",
+      "content": "- Nom de la société : Audelweiss Craft (par Audrey HOSSEPIAN)\n- Email : contact[@]audelweiss.fr\n- Forme juridique : Micro-entreprise\n- Numéro SIRET : 83275167100047",
+      "order": 0
+    },
+    {
+      "title": "2. Hébergeur du site",
+      "content": "- Nom : o2switch\n- Adresse : Chemin des Pardiaux, 63000 Clermont-Ferrand\n- SIRET : 510 909 807 00032\n- RCS : Clermont-Ferrand\n- Forme juridique : SAS au capital de 100 000 €\n- Numéro de téléphone : 04 44 44 60 40\n- Email : support@o2switch.fr",
+      "order": 1
+    },
+    {
+      "title": "3. Propriété intellectuelle",
+      "content": "L'ensemble des contenus présents sur le site audelweiss.fr, incluant, de manière non exhaustive, les textes, images, graphismes, logos, icônes, sons, logiciels, sont la propriété exclusive d'Audelweiss Craft ou de ses partenaires. Toute reproduction, distribution, modification, adaptation, retransmission ou publication, même partielle, de ces différents éléments est strictement interdite sans l'accord écrit préalable d'Audelweiss Craft.",
+      "order": 2
+    },
+    {
+      "title": "4. Données personnelles",
+      "content": "Les informations recueillies sur le site audelweiss.fr sont traitées conformément à notre [Politique de Confidentialité](lien vers la politique de confidentialité). Conformément à la loi \"Informatique et Libertés\" du 6 janvier 1978 modifiée et au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition aux données personnelles vous concernant. Pour exercer ces droits, vous pouvez nous contacter à l'adresse email suivante : contact[@]audelweiss.fr.",
+      "order": 3
+    },
+    {
+      "title": "5. Cookies",
+      "content": "Le site audelweiss.fr utilise des cookies pour améliorer l'expérience utilisateur, analyser le trafic du site et proposer des publicités ciblées. Vous pouvez configurer votre navigateur pour refuser les cookies ou être informé de leur utilisation. Pour en savoir plus, veuillez consulter notre [Politique de Confidentialité](lien vers la politique de confidentialité).",
+      "order": 4
+    },
+    {
+      "title": "6. Limitation de responsabilité",
+      "content": "Audelweiss Craft s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées sur le site audelweiss.fr. Toutefois, nous ne pouvons garantir l'exactitude, la précision ou l'exhaustivité des informations mises à disposition sur ce site. En conséquence, Audelweiss Craft décline toute responsabilité pour toute imprécision, inexactitude ou omission portant sur des informations disponibles sur le site.",
+      "order": 5
+    },
+    {
+      "title": "7. Droit applicable",
+      "content": "Les présentes mentions légales sont régies par le droit français. En cas de litige, et après une tentative de recherche de solution amiable, les tribunaux français seront seuls compétents pour connaître de ce litige.",
+      "order": 6
+    }
+  ]
+}

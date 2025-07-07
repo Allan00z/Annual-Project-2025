@@ -1,0 +1,64 @@
+{
+  "sections": [
+    {
+      "title": "1. Identification de la société",
+      "content": "Nom de l'entreprise : Audelweiss Craft\nEmail : contact[@]audelweiss.fr\nSIRET : 83275167100047",
+      "order": 0
+    },
+    {
+      "title": "2. Produits proposés",
+      "content": "Le site propose deux types de produits :\n\n- Produits physiques : Créations artisanales faites à la main, disponibles à l'achat.\n- Produits numériques téléchargeables : Modèles ou documents au format numérique (PDF, fichiers crochet, tricot, etc.), téléchargeables immédiatement après le paiement.",
+      "order": 1
+    },
+    {
+      "title": "3. Commande",
+      "content": "Pour passer une commande, vous devez sélectionner les produits de votre choix et les ajouter au panier, fournir les informations nécessaires (coordonnées de livraison, de facturation, etc.) et valider le paiement de votre commande.\nUn email de confirmation vous sera envoyé après validation de la commande. Nous nous réservons le droit de refuser ou d'annuler une commande en cas de non-paiement, de litige ou de suspicion de fraude.",
+      "order": 2
+    },
+    {
+      "title": "4. Prix et paiement",
+      "content": "Les prix sont indiqués en euros (€). Les frais de livraison sont ajoutés au montant de la commande lors de la validation. Le paiement s'effectue via les moyens sécurisés proposés sur le site. Le paiement intégral est requis pour valider la commande.",
+      "order": 3
+    },
+    {
+      "title": "5. Livraison des produits physiques",
+      "content": null,
+      "order": 4
+    },
+    {
+      "title": "6. Produits numériques téléchargeables",
+      "content": "Les produits numériques commandés sont accessibles immédiatement après confirmation du paiement. Vous recevez un lien de téléchargement dans l'email de confirmation. Conformément à l'article L.221-28 du Code de la consommation, vous renoncez à votre droit de rétractation dès lors que le téléchargement du produit a commencé.\nRestrictions d'utilisation : Il est interdit de modifier, reproduire, diffuser, partager ou revendre les produits numériques sans l'autorisation écrite préalable d'Audelweiss Craft. Toute utilisation non autorisée expose l'utilisateur à des poursuites judiciaires.",
+      "order": 5
+    },
+    {
+      "title": "7. Droit de rétractation (Produits physiques",
+      "content": "Conformément aux dispositions légales, vous disposez d'un délai de 14 jours à compter de la réception de votre commande pour exercer votre droit de rétractation et demander un remboursement.\nExceptions : Le droit de rétractation ne s'applique pas aux produits confectionnés sur mesure ou personnalisés.\nPour exercer ce droit, vous devez nous contacter à contact@audelweiss.fr en précisant votre numéro de commande. Les produits doivent être retournés en parfait état, dans leur emballage d'origine, à vos frais.",
+      "order": 6
+    },
+    {
+      "title": "8. Responsabilité",
+      "content": "Audelweiss Craft ne peut être tenue responsable des dommages indirects liés à l'utilisation des produits ou du site. La responsabilité de notre entreprise se limite au montant de la commande.",
+      "order": 7
+    },
+    {
+      "title": "9. Protection des données personnelles",
+      "content": "Nous collectons vos données personnelles pour traiter vos commandes. Pour plus d'informations sur le traitement de vos données, veuillez consulter notre [Politique de confidentialité](lien vers la politique de confidentialité).",
+      "order": 8
+    },
+    {
+      "title": "10. Propriété intellectuelle",
+      "content": "Tous les contenus présents sur le site audelweiss.fr sont protégés par le droit d'auteur et restent la propriété exclusive d'Audelweiss Craft. Toute reproduction, modification ou diffusion sans autorisation préalable est interdite.",
+      "order": 9
+    },
+    {
+      "title": "11. Litiges",
+      "content": "Les présentes CGV sont soumises au droit français. En cas de litige, nous privilégions une solution amiable. À défaut d'accord, le différend sera porté devant les tribunaux compétents du ressort du siège social d'Audelweiss Craft à Gap (05).",
+      "order": 10
+    },
+    {
+      "title": "12. Modification des CGV",
+      "content": "Nous nous réservons le droit de modifier ces Conditions Générales de Vente à tout moment. Les CGV applicables sont celles en vigueur au moment de la commande.",
+      "order": 11
+    }
+  ]
+}

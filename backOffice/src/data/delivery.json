@@ -1,0 +1,34 @@
+{
+  "sections": [
+    {
+      "title": "Modes de livraison",
+      "content": null,
+      "order": 0
+    },
+    {
+      "title": "Délai d'expédition et de livraison",
+      "content": "- Chaque commande est traitée sous 3 à 5 jours ouvrés, sauf mention contraire sur la fiche produit.\n- Une fois expédié, votre colis est généralement livré sous 48 à 72 heures pour la France métropolitaine.\n- Ces délais sont indicatifs et peuvent varier en fonction du transporteur et des périodes de forte affluence (fêtes, grèves, etc.).",
+      "order": 1
+    },
+    {
+      "title": "Livraison à l'étranger",
+      "content": "Vous souhaitez être livré(e) en dehors de la France ? Me contacter via le formulaire de contact avant de passer commande afin d'évaluer les options et les frais de livraison adaptés à votre pays.",
+      "order": 2
+    },
+    {
+      "title": "Suivi et réclamation",
+      "content": "- Un e-mail de confirmation vous sera envoyé dès l'expédition avec un lien de suivi.\n- En cas de problème avec votre livraison (retard, perte, colis endommagé), me contacter via le formulaire de contact dans un délai de 48 heures après réception du colis.\n- Si le colis est retourné à l'expéditeur (adresse incorrecte, non-récupération en point relais), un nouvel envoi pourra être effectué à vos frais.",
+      "order": 3
+    },
+    {
+      "title": "Retours et droit de rétractation",
+      "content": "- Conformément à l'article L.221-18 du Code de la consommation, vous disposez d'un droit de rétractation de 14 jours après réception du colis (sauf exceptions pour les produits personnalisés).\n- Les frais de retour sont à la charge du client.\n- Pour toute demande de retour, me contacter via le formulaire de contact en précisant votre numéro de commande et la raison du retour.",
+      "order": 4
+    },
+    {
+      "title": "Mentions légales",
+      "content": "- Les frais de livraison incluent les frais de transport ainsi que l'emballage.\n- Je ne peux être tenue responsable des retards liés aux transporteurs ou aux événements extérieurs (intempéries, grèves, etc.).",
+      "order": 5
+    }
+  ]
+}

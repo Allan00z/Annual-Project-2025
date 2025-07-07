@@ -110,6 +110,164 @@ export default {
           console.error('Error loading default Questions from JSON:', error);
         }
       }
+
+      // Check if Reseller data exists, if not, create default data
+      const existingReseller = await strapi.db.query('api::reseller.reseller').
+      findMany();
+      if (existingReseller.length === 0) {
+        console.log('Loading default Reseller data from JSON...');
+        const resellersPath = path.join(__dirname, 'data', 'resellers.json');
+        try {
+          const resellersData = JSON.parse(fs.readFileSync(resellersPath, 'utf8'));
+          for (const reseller of resellersData) {
+            await strapi.entityService.create('api::reseller.reseller', {
+              data: {
+                ...reseller,
+                publishedAt: new Date()
+              }
+            });
+          }
+          console.log(`${resellersData.length} default Resellers created successfully`);
+        } catch (error) {
+          console.error('Error loading default Resellers from JSON:', error);
+        }
+      }
+
+      // Check if CGV data exists, if not, create default data
+      const existingCgv = await strapi.db.query('api::cgv.cgv').findMany();
+      if (existingCgv.length === 0) {
+        console.log('Loading default CGV data from JSON...');
+        const cgvPath = path.join(__dirname, 'data', 'cgv.json');
+        try {
+          const cgvData = JSON.parse(fs.readFileSync(cgvPath, 'utf8'));
+          
+          // Create sections first
+          const createdSections = [];
+          for (const section of cgvData.sections) {
+            const createdSection = await strapi.entityService.create('api::section.section', {
+              data: {
+                ...section,
+                publishedAt: new Date()
+              }
+            });
+            createdSections.push(createdSection.id);
+          }
+          
+          // Create CGV with sections
+          await strapi.entityService.create('api::cgv.cgv', {
+            data: {
+              sections: createdSections,
+              publishedAt: new Date()
+            }
+          });
+          
+          console.log('Default CGV data created successfully with sections');
+        } catch (error) {
+          console.error('Error loading default CGV from JSON:', error);
+        }
+      }
+
+      // Check if Delivery data exists, if not, create default data
+      const existingDelivery = await strapi.db.query('api::delivery.delivery').findMany();
+      if (existingDelivery.length === 0) {
+        console.log('Loading default Delivery data from JSON...');
+        const deliveryPath = path.join(__dirname, 'data', 'delivery.json');
+        try {
+          const deliveryData = JSON.parse(fs.readFileSync(deliveryPath, 'utf8'));
+          
+          // Create sections first
+          const createdSections = [];
+          for (const section of deliveryData.sections) {
+            const createdSection = await strapi.entityService.create('api::section.section', {
+              data: {
+                ...section,
+                publishedAt: new Date()
+              }
+            });
+            createdSections.push(createdSection.id);
+          }
+          
+          // Create Delivery with sections
+          await strapi.entityService.create('api::delivery.delivery', {
+            data: {
+              sections: createdSections,
+              publishedAt: new Date()
+            }
+          });
+          
+          console.log('Default Delivery data created successfully with sections');
+        } catch (error) {
+          console.error('Error loading default Delivery from JSON:', error);
+        }
+      }
+
+      // Check if Privacy Policy data exists, if not, create default data
+      const existingPrivacyPolicy = await strapi.db.query('api::privacy-policy.privacy-policy').findMany();
+      if (existingPrivacyPolicy.length === 0) {
+        console.log('Loading default Privacy Policy data from JSON...');
+        const privacyPolicyPath = path.join(__dirname, 'data', 'privacy-policy.json');
+        try {
+          const privacyPolicyData = JSON.parse(fs.readFileSync(privacyPolicyPath, 'utf8'));
+          
+          // Create sections first
+          const createdSections = [];
+          for (const section of privacyPolicyData.sections) {
+            const createdSection = await strapi.entityService.create('api::section.section', {
+              data: {
+                ...section,
+                publishedAt: new Date()
+              }
+            });
+            createdSections.push(createdSection.id);
+          }
+          
+          // Create Privacy Policy with sections
+          await strapi.entityService.create('api::privacy-policy.privacy-policy', {
+            data: {
+              sections: createdSections,
+              publishedAt: new Date()
+            }
+          });
+          
+          console.log('Default Privacy Policy data created successfully with sections');
+        } catch (error) {
+          console.error('Error loading default Privacy Policy from JSON:', error);
+        }
+      }
+
+      // Check if Terms and Condition data exists, if not, create default data
+      const existingTermsAndCondition = await strapi.db.query('api::terms-and-condition.terms-and-condition').findMany();
+      if (existingTermsAndCondition.length === 0) {
+        console.log('Loading default Terms and Condition data from JSON...');
+        const termsAndConditionPath = path.join(__dirname, 'data', 'terms-and-condition.json');
+        try {
+          const termsAndConditionData = JSON.parse(fs.readFileSync(termsAndConditionPath, 'utf8'));
+          
+          // Create sections first
+          const createdSections = [];
+          for (const section of termsAndConditionData.sections) {
+            const createdSection = await strapi.entityService.create('api::section.section', {
+              data: {
+                ...section,
+                publishedAt: new Date()
+              }
+            });
+            createdSections.push(createdSection.id);
+          }
+          
+          // Create Terms and Condition with sections
+          await strapi.entityService.create('api::terms-and-condition.terms-and-condition', {
+            data: {
+              sections: createdSections,
+              publishedAt: new Date()
+            }
+          });
+          
+          console.log('Default Terms and Condition data created successfully with sections');
+        } catch (error) {
+          console.error('Error loading default Terms and Condition from JSON:', error);
+        }
+      }
     };
 
     createDefaultData();
