@@ -5,7 +5,3 @@ type Product = {
     stock: number
 }
 
-type CartProduct = {
-    product: Product,
-    quantity: number
-}

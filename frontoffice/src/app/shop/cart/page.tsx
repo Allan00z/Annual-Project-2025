@@ -2,11 +2,16 @@
 
 import products from "@/app/data/carousel/carousel";
 import { InputNumber } from "@/component/inputNumber.component";
+import { CartProduct } from "@/models";
 import { useEffect, useState } from "react";
 
 export default function Cart() {
   const [cart, setCart] = useState<CartProduct[]>([]);
   const [price, setPrice] = useState(0);
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<any>(null);
+  const [promoError, setPromoError] = useState('');
+  const [discount, setDiscount] = useState(0);
 
   const updateCart = (updatedCart: CartProduct[]) => {
     setCart(updatedCart);
@@ -18,12 +23,6 @@ export default function Cart() {
   };
 
   useEffect(() => {
-    const cartProducts: CartProduct[] = [
-        { product: { name: "Bijoux", price: 12.23, image: "test", stock: 19 }, quantity: 1 },
-        { product: { name: "Collier", price: 8.84, image: "internal test", stock: 16 }, quantity: 1 }
-    ]
-    localStorage.setItem("cart", JSON.stringify(cartProducts));
-
     const storedCart = JSON.parse(localStorage.getItem("cart") ?? "[]");
     setCart(storedCart);
   }, []);
@@ -32,6 +31,52 @@ export default function Cart() {
     const total = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
     setPrice(total);
   }, [cart])
+
+  const applyPromoCode = async () => {
+    if (!promoCode.trim()) return;
+    
+    try {
+      const response = await fetch(`http://localhost:1338/api/discounts?populate=*&filters[code][$eq]=${promoCode}`);
+      const data = await response.json();
+      
+      if (data.data && data.data.length > 0) {
+        const promo = data.data[0];
+        const now = new Date();
+        const start = new Date(promo.startDate);
+        const end = new Date(promo.endDate);
+        
+        if (now >= start && now <= end) {
+          // Check if the product associated with the promo is in the cart
+          if (promo.product) {
+            const productInCart = cart.some(item => item.product.id === promo.product.id);
+            console.log(productInCart);
+            if (!productInCart) {
+              setPromoError('Ce code promo ne s\'applique pas aux produits de votre panier');
+              return;
+            }
+          }
+          
+          setAppliedPromo(promo);
+          const discountAmount = promo.type === 'prix' ? promo.value : (price * promo.value / 100);
+          setDiscount(Math.min(discountAmount, price));
+          setPromoError('');
+        } else {
+          setPromoError('Code promo expiré');
+        }
+      } else {
+        setPromoError('Code promo invalide');
+      }
+    } catch (error) {
+      setPromoError('Erreur lors de la vérification du code');
+    }
+  };
+
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+    setDiscount(0);
+    setPromoCode('');
+    setPromoError('');
+  };
 
   return (
     <div className="py-6 px-24">
@@ -44,7 +89,7 @@ export default function Cart() {
       ) : (
         <div>
           <div className="flex flex-row">
-            <table className="table rounded-box border border-base-content/5 bg-base-100">
+            <table className="table h-fit rounded-box border border-base-content/5 bg-base-100">
             <thead>
               <tr>
                 <th scope="col"></th>
@@ -67,6 +112,12 @@ export default function Cart() {
                     <span className="text-base-content/70">Sous-total</span>
                     <span className="font-semibold">{price.toFixed(2)}€</span>
                   </div>
+                  {appliedPromo && (
+                    <div className="flex justify-between items-center text-green-600">
+                      <span>Réduction ({appliedPromo.code})</span>
+                      <span>-{discount.toFixed(2)}€</span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-center">
                     <span className="text-base-content/70">Livraison</span>
                     <span className="font-semibold">Gratuite</span>
@@ -74,8 +125,41 @@ export default function Cart() {
                   <div className="divider my-2"></div>
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>Total</span>
-                    <span>{price.toFixed(2)}€</span>
+                    <span>{(price - discount).toFixed(2)}€</span>
                   </div>
+                </div>
+                
+                <div className="mt-4">
+                  <h4 className="font-semibold mb-2">Code promo</h4>
+                  {!appliedPromo ? (
+                    <div className="space-y-2">
+                      <input 
+                        type="text" 
+                        placeholder="Entrez votre code promo" 
+                        className="input input-bordered w-full"
+                        value={promoCode}
+                        onKeyDown={(e) => e.key === 'Enter' && applyPromoCode()}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                      />
+                      <button 
+                        onClick={applyPromoCode}
+                        className="btn btn-outline btn-sm w-full"
+                      >
+                        Appliquer
+                      </button>
+                      {promoError && <p className="text-error text-sm">{promoError}</p>}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between bg-green-50 p-2 rounded">
+                      <span className="text-green-700 text-sm">Code {appliedPromo.code} appliqué</span>
+                      <button 
+                        onClick={removePromoCode}
+                        className="btn btn-ghost btn-xs text-error"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <button className="btn bg-[#303028] text-white hover:bg-[#404038] border-none w-full mt-4 px-6 py-3 whitespace-nowrap">
                   Procéder à la commande
@@ -107,13 +191,13 @@ const ProductLine = ({item, updateCart, cart} : {item: CartProduct, updateCart: 
   return (
     <tr>
       <td>
-        <button onClick={deleteItem} className="btn btn-sm btn-error">×</button>
+        <button onClick={deleteItem} className="btn btn-sm btn-error text-white text-lg">×</button>
       </td>
       <td>{item.product.name}</td>
       <td>{item.product.price}€</td>
       <td>
         <input type="number" className="input validator" required placeholder="Quantity" 
-          min="1" max={item.product.stock} value={item.quantity} onChange={(input) => changeQuantity(input.target.value)} />
+          min="1" value={item.quantity} onChange={(input) => changeQuantity(input.target.value)} />
       </td>
       <td>{(item.quantity * item.product.price).toFixed(2)}€</td>
     </tr>
