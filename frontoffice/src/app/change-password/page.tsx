@@ -4,7 +4,7 @@ import { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthService from "../services/auth.service";
-import PasswordStrengthIndicator from "../component/PasswordStrengthIndicator";
+import PasswordStrengthIndicator from "../../component/passwordStrengthIndicator";
 import { validatePassword } from "../utils/password-validator";
 
 export default function ChangePassword() {

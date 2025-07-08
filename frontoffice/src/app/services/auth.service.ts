@@ -321,6 +321,33 @@ export const AuthService = {
     }
 
     return data;
+  },
+
+  /**
+   * Get the current user's client information
+   * @returns Promise with the client data
+   */
+  getCurrentUserClient: async (): Promise<any> => {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const token = AuthService.getToken();
+    
+    if (!token) {
+      throw new Error("Utilisateur non authentifié");
+    }
+
+    const response = await fetch(`${STRAPI_URL}/api/users/me?populate=client`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur lors de la récupération des informations du client: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
   }
 };
 

@@ -515,7 +515,7 @@ export interface ApiClientClient extends Struct.CollectionTypeSchema {
   attributes: {
     billingAddress: Schema.Attribute.JSON &
       Schema.Attribute.CustomField<'plugin::google-maps.location-picker'>;
-    comment: Schema.Attribute.Relation<'oneToOne', 'api::comment.comment'>;
+    comments: Schema.Attribute.Relation<'oneToMany', 'api::comment.comment'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -555,7 +555,7 @@ export interface ApiCommentComment extends Struct.CollectionTypeSchema {
   };
   attributes: {
     article: Schema.Attribute.Relation<'manyToOne', 'api::article.article'>;
-    client: Schema.Attribute.Relation<'oneToOne', 'api::client.client'>;
+    client: Schema.Attribute.Relation<'manyToOne', 'api::client.client'>;
     content: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -844,7 +844,7 @@ export interface ApiProductCategoryProductCategory
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
-    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    products: Schema.Attribute.Relation<'manyToMany', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -889,7 +889,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
         number
       >;
     product_categories: Schema.Attribute.Relation<
-      'oneToMany',
+      'manyToMany',
       'api::product-category.product-category'
     >;
     publishedAt: Schema.Attribute.DateTime;

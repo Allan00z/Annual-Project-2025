@@ -24,9 +24,9 @@
     "lastname": {
       "type": "string"
     },
-    "comment": {
+    "comments": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::comment.comment",
       "mappedBy": "client"
     },

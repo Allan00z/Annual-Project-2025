@@ -7,6 +7,7 @@ import Image from 'next/image';
 import pelote from "../../../../medias/images/crochet-bg_files/0b0bc07c-1615-4152-b893-770a637929dc.webp";
 import { Article } from '../../../../models/article';
 import AuthService from '../../../services/auth.service';
+import CommentSection from '../../../../component/commentSection';
 
 interface Props {
   params: { id: string };
@@ -18,13 +19,13 @@ export default function ArticlePage({ params }: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isOwner, setIsOwner] = useState<boolean>(false);
-  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
 
   useEffect(() => {
     async function fetchArticle() {
       try {        
         setLoading(true);
-        const response = await fetch(`${STRAPI_URL}/api/articles/${id}?populate=*`);
+        const response = await fetch(`${STRAPI_URL}/api/articles/${id}?populate[0]=image&populate[1]=article_category&populate[2]=comments.client`);
         
         if (!response.ok) {
           throw new Error(`Erreur lors de la récupération de l'article (${response.status}) ${id}`);
@@ -162,6 +163,12 @@ export default function ArticlePage({ params }: Props) {
           ))}
         </div>
       </article>
+
+      {/* Section des commentaires */}
+      <CommentSection 
+        articleId={article.documentId} 
+        initialComments={article.comments || []} 
+      />
     </div>
   );
 }

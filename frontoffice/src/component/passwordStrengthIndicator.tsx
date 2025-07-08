@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { validatePassword, getPasswordStrength, getPasswordSuggestions } from "../utils/password-validator";
+import { validatePassword, getPasswordStrength, getPasswordSuggestions } from "../app/utils/password-validator";
 
 interface PasswordStrengthIndicatorProps {
   password: string;

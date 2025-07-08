@@ -29,7 +29,7 @@ async function getArticles(page: number = 1, pageSize: number = 5, search?: stri
   try {
     const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
     // Build the URL for fetching articles with pagination and optional filters
-    let url = `${STRAPI_URL}/api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+    let url = `${STRAPI_URL}/api/articles?populate[0]=image&populate[1]=article_category&populate[2]=comments&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
     
     // Add sort parameter to display newest articles first (by publishedAt or createdAt date)
     url += `&sort[0]=publishedAt:desc`;
@@ -233,6 +233,9 @@ export default async function Blog({
                     <>Mis à jour le {formatDate(article.updatedAt)}</> : 
                     <>Publié le {formatDate(article.publishedAt)}</>
                   } | {getReadingTime(article)} minutes de lecture estimées
+                  {article.comments && article.comments.length > 0 && (
+                    <> | {article.comments.length} commentaire{article.comments.length > 1 ? 's' : ''}</>
+                  )}
                 </p>
                 <p className="text-gray-700 mb-6 leading-relaxed">
                   {article.description}
