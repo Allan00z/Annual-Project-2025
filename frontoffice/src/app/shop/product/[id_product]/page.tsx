@@ -1,12 +1,13 @@
 'use client';
 
 import AuthService from "@/app/services/auth.service";
-import { CartProduct, Product, Order, Feedback } from "@/models";
+import { Product, Order, Feedback, OrderedProduct } from "@/models";
 import { useEffect, useState } from "react";
-
-export default function ProductPage({ params }: { params: { id_product: string } }) {
+import { useParams } from "next/navigation";
+export default function ProductPage() {
+  const params = useParams();
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
-  const { id_product } = params;
+  const id_product = params?.id_product as string;
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -140,13 +141,13 @@ export default function ProductPage({ params }: { params: { id_product: string }
   const addToCart = () => {
     if (!product) return;
     
-    const existingCart: CartProduct[] = JSON.parse(localStorage.getItem("cart") ?? "[]");
-    const existingItemIndex = existingCart.findIndex(item => item.product.documentId === product.documentId);
+    const existingCart: OrderedProduct[] = JSON.parse(localStorage.getItem("cart") ?? "[]");
+    const existingItemIndex = existingCart.findIndex(item => item.product?.id === product.id);
     
     if (existingItemIndex >= 0) {
       existingCart[existingItemIndex].quantity += quantity;
     } else {
-      existingCart.push({ product, quantity });
+      existingCart.push({id: 0, createdAt: "", updatedAt: "", quantity: quantity, product: product, documentId: ""});
     }
     
     localStorage.setItem("cart", JSON.stringify(existingCart));
