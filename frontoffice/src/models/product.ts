@@ -4,11 +4,6 @@ import { Option } from './option';
 import { Discount } from './discount';
 import { Feedback } from './feedback';
 
-export type CartProduct = {
-    product: Product,
-    quantity: number
-}
-
 export interface Product extends StrapiBase {
   name: string;
   description: string;
