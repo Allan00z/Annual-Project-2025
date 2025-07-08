@@ -2,7 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { mailerService } from '@/app/services/mailler.service';
 import { checkOrigin, checkAuth } from '@/app/api/middleware/auth.middleware';
 
+/**
+ * Route to handle email sending requests.
+ * This route checks the origin and authentication before processing the request.
+ *
+ * @param {NextRequest} request - The incoming request object.
+ * @returns {NextResponse} - The response object containing the result of the email sending operation.
+ */
 export async function POST(request: NextRequest) {
+  // Check if the request origin is allowed
   if (!checkOrigin(request)) {
     return NextResponse.json(
       { error: 'Origine non autorisée' },
@@ -10,6 +18,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Check if the user is authenticated
   const isAuthenticated = await checkAuth(request);
   if (!isAuthenticated) {
     return NextResponse.json(
@@ -23,7 +32,6 @@ export async function POST(request: NextRequest) {
     const { type, data } = body;
 
     let result;
-
     switch (type) {
       case 'contact': {
         const { to: contactTo, message, originalMessage } = data;

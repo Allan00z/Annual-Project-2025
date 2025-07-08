@@ -4,9 +4,9 @@ import hauteAlpe from "../../medias/images/crochet-bg_files/haute-alpe.jpg";
 interface CgvPageProps {}
 
 /**
- * Récupère les données des CGV depuis l'API
- * @returns {Promise<CgvSection[]>} Les sections CGV triées par ordre
- * @throws {Error} Si la requête échoue
+ * Get the CGV data from Strapi
+ * @returns {Promise<CgvSection[]>} 
+ * @throws {Error}
  */
 async function getCgvData(): Promise<CgvSection[]> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
@@ -21,8 +21,8 @@ async function getCgvData(): Promise<CgvSection[]> {
 
     const data: CgvApiResponse = await res.json();
     const sections = data.data.sections || [];
-    
-    // Récupère les détails de chaque section
+
+    // Get detailed information for each section
     const sectionsWithDetails = await Promise.all(
       sections.map(async (section) => {
         try {
@@ -43,7 +43,7 @@ async function getCgvData(): Promise<CgvSection[]> {
       })
     );
 
-    // Trie les sections par ordre
+    // Sort sections by order
     return sectionsWithDetails.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("Error fetching CGV data:", error);
@@ -57,7 +57,6 @@ export default async function CgvPage({}: CgvPageProps) {
   return (
     <div className="min-h-screen bg-base-100 py-12">
       <div className="container mx-auto px-6">
-        {/* Header */}
         <div 
           className="text-center mb-16 relative py-20 rounded-xl overflow-hidden"
           style={{
@@ -66,10 +65,8 @@ export default async function CgvPage({}: CgvPageProps) {
             backgroundPosition: 'center',
           }}
         >
-          {/* Overlay pour améliorer la lisibilité du texte */}
           <div className="absolute inset-0 bg-black/50"></div>
           
-          {/* Contenu du header */}
           <div className="relative z-10">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               📋 Conditions Générales de Vente
@@ -80,7 +77,6 @@ export default async function CgvPage({}: CgvPageProps) {
           </div>
         </div>
 
-        {/* Sections CGV */}
         <div className="space-y-8">
           {cgvSections.map((section) => (
             <div key={section.documentId} className="card bg-base-100 shadow-xl">
@@ -89,9 +85,7 @@ export default async function CgvPage({}: CgvPageProps) {
                   {section.title}
                 </h2>
                 
-                {/* Contenu de la section */}
                 {section.content ? (
-                  // Si la section a du contenu, l'afficher directement
                   <div className="prose prose-sm max-w-none">
                     {section.content.split('\n').map((paragraph, index) => (
                       paragraph.trim() && (
@@ -102,7 +96,6 @@ export default async function CgvPage({}: CgvPageProps) {
                     ))}
                   </div>
                 ) : (
-                  // Si la section n'a pas de contenu, afficher les sous-sections
                   section.sections && section.sections.length > 0 && (
                     <div className="space-y-6">
                       {section.sections

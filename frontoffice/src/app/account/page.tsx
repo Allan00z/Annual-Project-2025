@@ -58,6 +58,7 @@ export default function Account() {
   const router = useRouter();
 
   useEffect(() => {
+    // Check if user is authenticated and fetch user data
     const checkAuthAndFetchUser = async () => {
       if (!AuthService.isLoggedIn()) {
         router.push('/login');
@@ -138,7 +139,6 @@ export default function Account() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex justify-between items-center">
               <div>
@@ -154,9 +154,9 @@ export default function Account() {
             </div>
           </div>
 
+          {/* If user data is available, display it */}
           {userData && (
             <div className="space-y-6">
-              {/* Informations personnelles et client */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">
                   Informations personnelles
@@ -290,7 +290,7 @@ export default function Account() {
                 </div>
               </div>
 
-              {/* Rôle utilisateur */}
+              {/* If user has a role, display role and permissions */}
               {userData.role && (
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -329,7 +329,6 @@ export default function Account() {
                 </div>
               )}
 
-              {/* Actions */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">
                   Actions

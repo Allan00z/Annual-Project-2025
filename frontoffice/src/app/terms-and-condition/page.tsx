@@ -4,9 +4,9 @@ import hauteAlpe from "../../medias/images/crochet-bg_files/haute-alpe.jpg";
 interface TermsAndConditionPageProps {}
 
 /**
- * Récupère les données des mentions légales depuis l'API
- * @returns {Promise<TermsAndConditionSection[]>} Les sections de mentions légales triées par ordre
- * @throws {Error} Si la requête échoue
+ * Get the terms and conditions data from the Strapi API.
+ * @returns {Promise<TermsAndConditionSection[]>} 
+ * @throws {Error}
  */
 async function getTermsAndConditionData(): Promise<TermsAndConditionSection[]> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
@@ -22,7 +22,6 @@ async function getTermsAndConditionData(): Promise<TermsAndConditionSection[]> {
     const data: TermsAndConditionApiResponse = await res.json();
     const sections = data.data.sections || [];
     
-    // Récupère les détails de chaque section
     const sectionsWithDetails = await Promise.all(
       sections.map(async (section) => {
         try {
@@ -43,7 +42,7 @@ async function getTermsAndConditionData(): Promise<TermsAndConditionSection[]> {
       })
     );
 
-    // Trie les sections par ordre
+    // Order sections by their 'order' field
     return sectionsWithDetails.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("Error fetching terms and condition data:", error);
@@ -57,7 +56,6 @@ export default async function TermsAndConditionPage({}: TermsAndConditionPagePro
   return (
     <div className="min-h-screen bg-base-100 py-12">
       <div className="container mx-auto px-6">
-        {/* Header */}
         <div 
           className="text-center mb-16 relative py-20 rounded-xl overflow-hidden"
           style={{
@@ -66,10 +64,7 @@ export default async function TermsAndConditionPage({}: TermsAndConditionPagePro
             backgroundPosition: 'center',
           }}
         >
-          {/* Overlay pour améliorer la lisibilité du texte */}
-          <div className="absolute inset-0 bg-black/50"></div>
-          
-          {/* Contenu du header */}
+          <div className="absolute inset-0 bg-black/50"></div>          
           <div className="relative z-10">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               📄 Mentions Légales
@@ -80,7 +75,6 @@ export default async function TermsAndConditionPage({}: TermsAndConditionPagePro
           </div>
         </div>
 
-        {/* Sections des mentions légales */}
         <div className="space-y-8">
           {termsAndConditionSections.map((section) => (
             <div key={section.documentId} className="card bg-base-100 shadow-xl">
@@ -89,9 +83,7 @@ export default async function TermsAndConditionPage({}: TermsAndConditionPagePro
                   {section.title}
                 </h2>
                 
-                {/* Contenu de la section */}
                 {section.content ? (
-                  // Si la section a du contenu, l'afficher directement
                   <div className="prose prose-sm max-w-none">
                     {section.content.split('\n').map((paragraph, index) => (
                       paragraph.trim() && (
@@ -102,7 +94,6 @@ export default async function TermsAndConditionPage({}: TermsAndConditionPagePro
                     ))}
                   </div>
                 ) : (
-                  // Si la section n'a pas de contenu, afficher les sous-sections
                   section.sections && section.sections.length > 0 && (
                     <div className="space-y-6">
                       {section.sections
@@ -138,7 +129,6 @@ export default async function TermsAndConditionPage({}: TermsAndConditionPagePro
           ))}
         </div>
 
-        {/* Section informative supplémentaire */}
         <div className="mt-16 card bg-[#f7c0a6] shadow-xl">
           <div className="card-body">
             <div className="text-center">

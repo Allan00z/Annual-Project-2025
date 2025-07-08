@@ -5,6 +5,7 @@ import { CartProduct, Product, Order, Feedback } from "@/models";
 import { useEffect, useState } from "react";
 
 export default function ProductPage({ params }: { params: { id_product: string } }) {
+  const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   const { id_product } = params;
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:1338/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`, {
+        const response = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -44,22 +45,26 @@ export default function ProductPage({ params }: { params: { id_product: string }
       }
     };
 
+    // Check if the user has ordered this product
     const checkUserOrder = async () => {
       try {
+        // Get the current user
         const currentUser = AuthService.getCurrentUser();
         if (!currentUser) return;
 
+        // Get the token for authenticated requests
         const token = AuthService.getToken();
         if (!token) return;
 
+        // Get the client data for the current user
         const userClientData = await AuthService.getCurrentUserClient();
         
         if (!userClientData.client) {
           return;
         }
 
-        const ordersUrl = `http://localhost:1338/api/orders?populate[0]=client&populate[1]=ordered_products&populate[2]=ordered_products.product&filters[client][documentId][$eq]=${userClientData.client.documentId}`;
-        
+        // Fetch orders for the current user
+        const ordersUrl = `${STRAPI_URL}/api/orders?populate[0]=client&populate[1]=ordered_products&populate[2]=ordered_products.product&filters[client][documentId][$eq]=${userClientData.client.documentId}`;
         const response = await fetch(ordersUrl, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -71,6 +76,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
           const ordersData = await response.json();
           const orders: Order[] = ordersData.data;
           
+          // Check if the user has ordered the product
           const hasOrdered = orders.some(order => {
             return order.ordered_products?.some(orderedProduct => {
               const match = orderedProduct.product?.documentId === id_product;
@@ -80,8 +86,9 @@ export default function ProductPage({ params }: { params: { id_product: string }
           
           setHasOrderedProduct(hasOrdered);
 
+          // If the user has ordered the product, fetch their feedback
           if (hasOrdered) {
-            const feedbackUrl = `http://localhost:1338/api/feedbacks?populate[0]=client&populate[1]=product&filters[client][documentId][$eq]=${userClientData.client.documentId}&filters[product][documentId][$eq]=${id_product}`;
+            const feedbackUrl = `${STRAPI_URL}/api/feedbacks?populate[0]=client&populate[1]=product&filters[client][documentId][$eq]=${userClientData.client.documentId}&filters[product][documentId][$eq]=${id_product}`;
             
             const feedbackResponse = await fetch(feedbackUrl, {
               headers: {
@@ -112,6 +119,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
     checkUserOrder();
   }, [id_product]);
 
+  // Function to calculate the discounted price based on active discounts
   const calculateDiscountedPrice = (price: number, discounts?: any[]) => {
     const activeDiscount = discounts?.find(discount => {
       const now = new Date();
@@ -128,6 +136,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
     return price;
   };
 
+  // Function to add the product to the cart
   const addToCart = () => {
     if (!product) return;
     
@@ -145,6 +154,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
     setTimeout(() => setAdded(false), 2000);
   };
 
+  // Function to submit new feedback
   const submitFeedback = async () => {
     if (!product || !newFeedback.content.trim()) return;
 
@@ -157,10 +167,9 @@ export default function ProductPage({ params }: { params: { id_product: string }
         throw new Error("Utilisateur non authentifié");
       }
 
-      // Récupérer les informations du client
       const userClientData = await AuthService.getCurrentUserClient();
       
-      const response = await fetch('http://localhost:1338/api/feedbacks', {
+      const response = await fetch(`${STRAPI_URL}/api/feedbacks`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -182,7 +191,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
         setShowFeedbackForm(false);
         setNewFeedback({ grade: 5, content: '' });
         
-        const productResponse = await fetch(`http://localhost:1338/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`);
+        const productResponse = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`);
         const productData = await productResponse.json();
         setProduct(productData.data);
       } else {
@@ -208,7 +217,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
         throw new Error("Utilisateur non authentifié");
       }
 
-      const response = await fetch(`http://localhost:1338/api/feedbacks/${userFeedback.documentId}`, {
+      const response = await fetch(`${STRAPI_URL}/api/feedbacks/${userFeedback.documentId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -228,7 +237,7 @@ export default function ProductPage({ params }: { params: { id_product: string }
         setEditingFeedback(false);
         setEditFeedback({ grade: 5, content: '' });
         
-        const productResponse = await fetch(`http://localhost:1338/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`);
+        const productResponse = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`);
         const productData = await productResponse.json();
         setProduct(productData.data);
       } else {

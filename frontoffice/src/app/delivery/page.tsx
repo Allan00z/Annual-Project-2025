@@ -4,9 +4,9 @@ import hauteAlpe from "../../medias/images/crochet-bg_files/haute-alpe.jpg";
 interface DeliveryPageProps {}
 
 /**
- * Récupère les données de livraison depuis l'API
- * @returns {Promise<Section[]>} Les sections de livraison triées par ordre
- * @throws {Error} Si la requête échoue
+ * Get delivery data from Strapi API.
+ * @returns {Promise<Section[]>} A promise that resolves to an array of delivery sections.
+ * @throws {Error} If the fetch operation fails or if the response is not ok.
  */
 async function getDeliveryData(): Promise<Section[]> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
@@ -22,7 +22,7 @@ async function getDeliveryData(): Promise<Section[]> {
     const data: DeliveryApiResponse = await res.json();
     const sections = data.data.sections || [];
     
-    // Récupère les détails de chaque section
+    // Get detailed information for each section
     const sectionsWithDetails = await Promise.all(
       sections.map(async (section) => {
         try {
@@ -43,7 +43,7 @@ async function getDeliveryData(): Promise<Section[]> {
       })
     );
 
-    // Trie les sections par ordre
+    // Sort sections by order
     return sectionsWithDetails.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error("Error fetching delivery data:", error);
@@ -57,7 +57,6 @@ export default async function DeliveryPage({}: DeliveryPageProps) {
   return (
     <div className="min-h-screen bg-base-100 py-12">
       <div className="container mx-auto px-6">
-        {/* Header */}
         <div 
           className="text-center mb-16 relative py-20 rounded-xl overflow-hidden"
             style={{
@@ -66,10 +65,7 @@ export default async function DeliveryPage({}: DeliveryPageProps) {
                 backgroundPosition: 'center',
             }}
         >
-          {/* Overlay pour améliorer la lisibilité du texte */}
-          <div className="absolute inset-0 bg-black/50"></div>
-          
-          {/* Contenu du header */}
+          <div className="absolute inset-0 bg-black/50"></div>          
           <div className="relative z-10">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               🚚 Livraisons
@@ -80,7 +76,6 @@ export default async function DeliveryPage({}: DeliveryPageProps) {
           </div>
         </div>
 
-        {/* Sections de livraison */}
         <div className="space-y-8">
           {deliverySections.map((section) => (
             <div key={section.documentId} className="card bg-base-100 shadow-xl">
@@ -89,9 +84,7 @@ export default async function DeliveryPage({}: DeliveryPageProps) {
                   {section.title}
                 </h2>
                 
-                {/* Contenu de la section ou sous-sections */}
                 {section.content ? (
-                  // Si la section a du contenu, l'afficher directement
                   <div className="prose prose-sm max-w-none">
                     {section.content.split('\n').map((paragraph, index) => (
                       <p key={index} className="text-base-content/70 mb-3 last:mb-0">
@@ -100,7 +93,6 @@ export default async function DeliveryPage({}: DeliveryPageProps) {
                     ))}
                   </div>
                 ) : (
-                  // Si la section n'a pas de contenu, afficher les sous-sections
                   section.sections && section.sections.length > 0 && (
                     <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
                       {section.sections
@@ -134,7 +126,6 @@ export default async function DeliveryPage({}: DeliveryPageProps) {
           ))}
         </div>
 
-        {/* Section informative supplémentaire */}
         <div className="mt-16 card bg-[#f7c0a6] shadow-xl">
           <div className="card-body">
             <div className="text-center">

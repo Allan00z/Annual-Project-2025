@@ -7,10 +7,12 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
  * Authentification middleware for Next.js API routes.
  */
 export async function middleware(request: NextRequest) {
+  // Check if the request is from an allowed origin
   if (!checkOrigin(request)) {
     return NextResponse.json({ error: 'Requête non autorisée (origin)' }, { status: 403 });
   }
 
+  // Check if the request is authenticated 
   const isAuthenticated = await checkAuth(request);
   if (!isAuthenticated) {
     return NextResponse.redirect(`${APP_URL}/login`);

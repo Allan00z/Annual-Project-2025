@@ -24,19 +24,21 @@ export default function ResetPassword() {
     }
   }, [searchParams]);
 
+  // Handle form submission 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
 
+    // Check password confirmation
     if (password !== passwordConfirmation) {
       setError("Les mots de passe ne correspondent pas");
       setLoading(false);
       return;
     }
 
-    // Validation du mot de passe côté client
+    // Validate password is correct
     const passwordValidation = validatePassword(password);
     if (!passwordValidation.isValid) {
       setError(`Mot de passe invalide: ${passwordValidation.errors.join(", ")}`);

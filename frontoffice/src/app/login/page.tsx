@@ -18,6 +18,7 @@ export default function Login() {
     }
   }, [router]);
 
+  // Handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");

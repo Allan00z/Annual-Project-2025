@@ -39,16 +39,20 @@ export default function Contact() {
   const [success, setSuccess] = useState<boolean>(false);
 
   useEffect(() => {
+    // Initialization function to check user role and fetch data
     const initializePage = async () => {
       const user: User | null = AuthService.getCurrentUser();
       
       if (user) {
+        // Check if the user has the "owner" role
         const hasOwnerRole = await AuthService.checkUserRole("owner");
         setIsOwner(hasOwnerRole);
         
         if (hasOwnerRole) {
+          // Fetch contact messages if the user is an owner
           await fetchContactMessages();
         } else {
+          // If the user is not an owner, fetch client data
           await fetchClientData(user);
         }
       }
@@ -59,6 +63,7 @@ export default function Contact() {
     initializePage();
   }, []);
 
+  // Function to fetch contact messages for owners
   const fetchContactMessages = async () => {
     setLoadingMessages(true);
     try {
@@ -84,6 +89,7 @@ export default function Contact() {
     }
   };
 
+  // Function to fetch client data for non-owner users
   const fetchClientData = async (user: User) => {
     try {
       const token = AuthService.getToken();
@@ -111,6 +117,7 @@ export default function Contact() {
     setEmail(user.email);
   };
 
+  // Function to handle form submission of the contact form
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -124,6 +131,7 @@ export default function Contact() {
     }
 
     try {
+      // Get the token from AuthService
       const token = AuthService.getToken();
       
       const contactData: Partial<ContactMsg> = {
@@ -133,6 +141,7 @@ export default function Contact() {
         content
       };
 
+      // Send the contact message to the API
       const response = await fetch("http://localhost:1338/api/contact-msgs", {
         method: "POST",
         headers: {
@@ -159,6 +168,7 @@ export default function Contact() {
     }
   };
 
+  // Function to format date strings to a readable format
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
@@ -169,6 +179,7 @@ export default function Contact() {
     });
   };
 
+  // Function to handle message deletion
   const handleDeleteMessage = async (messageId: string | number) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ?")) {
       return;
@@ -195,11 +206,14 @@ export default function Contact() {
     }
   };
 
+  // Function to handle reply button click
   const handleReplyClick = (message: ContactMsg) => {
     setSelectedMessage(message);
     setIsReplyModalOpen(true);
   };
 
+  // Function to handle reply success
+  // This function will be called from the ReplyModal component after a successful reply
   const handleReplySuccess = async (messageId: string | number) => {
     setReplySuccess("Réponse envoyée avec succès !");
     
@@ -215,7 +229,6 @@ export default function Contact() {
       });
 
       if (response.ok) {
-        // Actualiser la liste des messages
         await fetchContactMessages();
         setReplySuccess("Réponse envoyée avec succès ! Le message a été retirer.");
       } else {

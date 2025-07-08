@@ -42,7 +42,6 @@ export default function CommentSection({ articleId, initialComments }: CommentSe
     
     checkAuthAndRole();
     
-    // Listen for auth changes
     const handleAuthChange = () => {
       checkAuthAndRole();
     };
@@ -74,21 +73,18 @@ export default function CommentSection({ articleId, initialComments }: CommentSe
         throw new Error('Utilisateur non authentifié');
       }
 
-      // Récupérer les informations du client associé à l'utilisateur
       const userWithClient = await AuthService.getCurrentUserClient();
 
       if (!userWithClient?.client) {
         throw new Error('Aucun profil client associé à votre compte');
       }
 
-      // Soumettre le commentaire
       await CommentService.createComment({
         content: newComment.trim(),
         article: articleId,
         client: userWithClient.client.documentId,
       });
       
-      // Recharger les commentaires pour récupérer les données complètes depuis l'API
       const updatedComments = await CommentService.getArticleComments(articleId);
       setComments(updatedComments);
       setNewComment('');

@@ -4,11 +4,8 @@ import handwithcrochet from "../../medias/images/crochet-bg_files/4b016c7372b544
 import CarouselComponent from "@/component/carousel.component";
 
 const Hero = () => {
-
-
   return (
     <>
-      {/* HERO SECTION */}
       <section
         className="relative bg-cover bg-center h-180 flex items-center rounded-xl"
         style={{ backgroundImage: `url(${handwithcrochet.src})` }}

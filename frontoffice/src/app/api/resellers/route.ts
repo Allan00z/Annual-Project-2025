@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
+/**
+ * Route to handle the creation of a reseller in Strapi.
+ * This route checks if the user is authenticated and has the 'owner' role before allowing the creation.
+ */
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();

@@ -55,6 +55,13 @@ class MailerService {
     }
   }
 
+  /**
+   * Send a contact response email
+   * @param to Recipient's email address
+   * @param message The response message to be sent
+   * @param originalMessage The original message from the user (optional)
+   * @returns Promise with the result of the email sending
+   */
   async sendContactResponseEmail(to: string, message: string, originalMessage?: string): Promise<nodemailer.SentMessageInfo> {
     const subject = 'Réponse à votre message';
     const html = `

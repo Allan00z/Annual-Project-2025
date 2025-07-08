@@ -5,7 +5,6 @@ import creatrice from "../../medias/images/crochet-bg_files/4b016c7372b5440180c5
 const Creatrice = () => {
   return (
     <section className="container mx-auto py-20 px-15 flex flex-col md:flex-row items-center gap-10">
-      {/* Partie texte */}
       <div className="flex flex-col md:w-1/2 space-y-6">
         <h2 className="text-3xl md:text-5xl font-bold mb-4 text-center md:text-left">
           À propos de la créatrice
@@ -35,9 +34,7 @@ const Creatrice = () => {
         </a>
       </div>
 
-      {/* Partie image */}
       <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 md:w-1/2 mx-auto py-10 justify-center">
-        {/* Image des bandeaux */}
         <div className="relative w-80 md:w-2/3 h-80 md:h-[500px]">
           <Image
             src={bandeaux}
@@ -45,7 +42,6 @@ const Creatrice = () => {
             fill
             className="object-cover rounded-4xl outline-[3px] outline-[#f7c0a6]"
           />
-          {/* Image de la créatrice en forme ovale */}
           <div className="absolute w-48 h-64 md:w-64 md:h-80 rounded-4xl overflow-hidden -bottom-10 -right-5 md:-right-30 outline-[5px] outline-white">
             <Image src={creatrice} alt="créatrice" fill className="absolute object-cover" />
           </div>

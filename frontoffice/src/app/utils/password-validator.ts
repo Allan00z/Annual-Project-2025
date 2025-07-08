@@ -10,34 +10,34 @@ export interface PasswordStrength {
 }
 
 /**
- * Valide un mot de passe selon les critères de sécurité
- * @param password - Le mot de passe à valider
- * @returns Résultat de la validation avec les erreurs
+ * Valid a password based on specific criteria
+ * @param password - The password to validate
+ * @returns An object indicating if the password is valid and any errors found
  */
 export function validatePassword(password: string): PasswordValidationResult {
   const errors: string[] = [];
 
-  // Minimum 14 caractères
+  // At least 14 characters
   if (password.length < 14) {
     errors.push("Le mot de passe doit contenir au moins 14 caractères");
   }
 
-  // Au moins une majuscule
+  // At least 1 uppercase letter
   if (!/[A-Z]/.test(password)) {
     errors.push("Le mot de passe doit contenir au moins une majuscule");
   }
 
-  // Au moins une minuscule
+  // At least 1 lowercase letter
   if (!/[a-z]/.test(password)) {
     errors.push("Le mot de passe doit contenir au moins une minuscule");
   }
 
-  // Au moins un chiffre
+  // At least 1 digit
   if (!/[0-9]/.test(password)) {
     errors.push("Le mot de passe doit contenir au moins un chiffre");
   }
 
-  // Au moins un caractère spécial
+  // At least 1 special character
   if (!/[^A-Za-z0-9]/.test(password)) {
     errors.push("Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*()_+-=[]{}|;:,.<>?)");
   }
@@ -49,37 +49,25 @@ export function validatePassword(password: string): PasswordValidationResult {
 }
 
 /**
- * Calcule la force d'un mot de passe
- * @param password - Le mot de passe à analyser
- * @returns Score et informations sur la force du mot de passe
+ * Calculates the strength of a password
+ * @param password - The password to evaluate
+ * @returns An object containing the strength score, label, and color
  */
 export function getPasswordStrength(password: string): PasswordStrength {
   let score = 0;
   
-  // Longueur
   if (password.length >= 14) score++;
-  if (password.length >= 20) score++;
-  
-  // Majuscules
+  if (password.length >= 20) score++;  
   if (/[A-Z]/.test(password)) score++;
-  
-  // Minuscules
-  if (/[a-z]/.test(password)) score++;
-  
-  // Chiffres
+  if (/[a-z]/.test(password)) score++;  
   if (/[0-9]/.test(password)) score++;
-  
-  // Caractères spéciaux
   if (/[^A-Za-z0-9]/.test(password)) score++;
   
-  // Diversité des caractères spéciaux
   const specialChars = password.match(/[^A-Za-z0-9]/g);
   if (specialChars && new Set(specialChars).size >= 2) score++;
   
-  // Réduire le score si le mot de passe est trop court
   if (password.length < 14) score = Math.min(score, 2);
   
-  // Limiter le score à 5
   score = Math.min(score, 5);
   
   const strengthLabels = [
@@ -99,9 +87,9 @@ export function getPasswordStrength(password: string): PasswordStrength {
 }
 
 /**
- * Génère des suggestions pour améliorer un mot de passe
- * @param password - Le mot de passe à analyser
- * @returns Liste de suggestions
+ * Generates password suggestions based on the current password
+ * @param password - The current password to analyze
+ * @returns An array of suggestions to improve the password
  */
 export function getPasswordSuggestions(password: string): string[] {
   const validation = validatePassword(password);

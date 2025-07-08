@@ -19,6 +19,7 @@ export default function AddArticle() {
   const [isOwner, setIsOwner] = useState(false);
   
   useEffect(() => {
+    // Use AuthService to check if the user is an owner
     const checkRole = async () => {
         const owner = await AuthService.checkUserRole('owner');
         setIsOwner(owner);
@@ -27,6 +28,7 @@ export default function AddArticle() {
     fetchCategories();
   }, []);
 
+  // Get articles categories from Strapi
   const fetchCategories = async () => {
     try {
       const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';

@@ -1,4 +1,3 @@
-// app/blog/articles/[id]/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -22,6 +21,7 @@ export default function ArticlePage({ params }: Props) {
   const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1338';
 
   useEffect(() => {
+    // Fetch the article data from Strapi
     async function fetchArticle() {
       try {        
         setLoading(true);
@@ -35,6 +35,7 @@ export default function ArticlePage({ params }: Props) {
         const articleData: Article = data;
         setArticle(articleData);
         
+        // Check if the user is an owner
         const checkOwnerStatus = async () => {
           const isOwner = await AuthService.checkUserRole("owner");
           setIsOwner(isOwner);
@@ -93,7 +94,7 @@ export default function ArticlePage({ params }: Props) {
     );
   }
 
-  // Formater la date de publication
+  // Format the publication date to "day month year" in French
   const publishDate = article.publishedAt ? new Date(article.publishedAt) : new Date();
   const formattedDate = new Intl.DateTimeFormat('fr-FR', {
     day: 'numeric',
@@ -164,7 +165,6 @@ export default function ArticlePage({ params }: Props) {
         </div>
       </article>
 
-      {/* Section des commentaires */}
       <CommentSection 
         articleId={article.documentId} 
         initialComments={article.comments || []} 

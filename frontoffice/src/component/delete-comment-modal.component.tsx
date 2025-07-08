@@ -25,7 +25,7 @@ export default function DeleteCommentModal({
       await onConfirm();
       onClose();
     } catch (error) {
-      // L'erreur sera gérée par le composant parent
+      // Parent component should handle the error
     } finally {
       setIsSubmitting(false);
     }

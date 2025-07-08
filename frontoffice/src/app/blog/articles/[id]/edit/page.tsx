@@ -28,6 +28,7 @@ export default function EditArticlePage({ params }: Props) {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
 
   useEffect(() => {
+    // Check if the user has the 'owner' role
     const checkOwnerRole = async () => {
       const isUserOwner = await AuthService.checkUserRole('owner');
       setIsOwner(isUserOwner);
@@ -43,6 +44,7 @@ export default function EditArticlePage({ params }: Props) {
     checkOwnerRole();
   }, [id]);
 
+  // fetch the article and categories from Strapi 
   const fetchArticleAndCategories = async () => {
     try {
       setLoading(true);
@@ -90,6 +92,7 @@ export default function EditArticlePage({ params }: Props) {
     }
   };
 
+  // Handle form submission to update the article
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     

@@ -1,11 +1,10 @@
-import pelote from "../../medias/images/crochet-bg_files/0b0bc07c-1615-4152-b893-770a637929dc.webp";
 import Image from "next/image";
 import blogPosts from "../data/blog/blog";
 
 const Blog = () => {
+  // Shuffle the blog posts to display them in a random order
   const randomBlogPosts = [...blogPosts]
-    .sort(() => 0.5 - Math.random()) // mélange aléatoire
-    .slice(0, 4); // prend les 4 premiers
+    .sort(() => 0.5 - Math.random())
 
   return (
     <section className="container mx-auto py-20 px-6">
@@ -18,21 +17,16 @@ const Blog = () => {
             key={index}
             className="relative card shadow-md rounded-xl overflow-hidden md:h-120 h-96"
           >
-            {/* Image en fond */}
             <Image
               src={post.image}
               alt={post.alt}
               fill
               className="object-cover"
             />
-
-            {/* Overlay rose semi-transparent */}
             <div
               className="absolute inset-0 z-10"
-              style={{ backgroundColor: "rgba(247, 192, 166, 0.6)" }} // f7c0a6 + 80% opacity
+              style={{ backgroundColor: "rgba(247, 192, 166, 0.6)" }}
             />
-
-            {/* Contenu */}
             <div className="relative z-20 card-body flex flex-col justify-end text-black">
               <div className="badge badge-neutral w-fit p-4 mb-2 absolute top-5 text-lg">
                 {post.category}

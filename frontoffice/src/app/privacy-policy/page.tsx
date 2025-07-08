@@ -1,7 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 
-// Interface pour les données de la politique de confidentialité
 interface PrivacyPolicySection {
   id: number;
   documentId: string;
@@ -27,7 +26,7 @@ interface PrivacyPolicyResponse {
   meta: {};
 }
 
-// Fonction pour récupérer les données de la politique de confidentialité
+// Get the privacy policy data from the API
 async function getPrivacyPolicyData(): Promise<PrivacyPolicyResponse | null> {
   try {
     const response = await fetch('http://localhost:1338/api/privacy-policy?populate=*', {
@@ -54,12 +53,11 @@ export default async function PrivacyPolicyPage() {
 
   const { sections } = privacyPolicyData.data;
 
-  // Trier les sections par ordre
+  // Sort sections by order
   const sortedSections = sections.sort((a, b) => a.order - b.order);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -71,7 +69,6 @@ export default async function PrivacyPolicyPage() {
         </div>
       </div>
 
-      {/* Contenu principal */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="prose prose-lg max-w-none">
@@ -79,7 +76,6 @@ export default async function PrivacyPolicyPage() {
               Cette politique de confidentialité décrit comment nous collectons, utilisons et protégeons vos informations personnelles lorsque vous utilisez notre site web.
             </p>
 
-            {/* Sections */}
             <div className="space-y-8">
               {sortedSections.map((section) => (
                 <div key={section.id} className="border-l-4 border-orange-400 pl-6">
@@ -97,7 +93,6 @@ export default async function PrivacyPolicyPage() {
               ))}
             </div>
 
-            {/* Contact */}
             <div className="mt-12 p-6 bg-orange-50 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 Exercer vos droits
@@ -116,7 +111,7 @@ export default async function PrivacyPolicyPage() {
   );
 }
 
-// Métadonnées pour le SEO
+// Métadonnées for SEO
 export const metadata = {
   title: 'Politique de confidentialité - Audelweiss Craft',
   description: 'Découvrez comment nous collectons, utilisons et protégeons vos données personnelles sur le site Audelweiss Craft.',

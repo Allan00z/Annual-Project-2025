@@ -13,6 +13,10 @@ interface ApiResponse {
   data: Reseller;
 }
 
+/** * Fetches a reseller by its ID from the Strapi API.
+ * @param documentId - The ID of the reseller to fetch.
+ * @returns A promise that resolves to the reseller data or null if not found.
+ */
 async function getResellerById(documentId: string): Promise<Reseller | null> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {
@@ -34,13 +38,11 @@ async function getResellerById(documentId: string): Promise<Reseller | null> {
 
 export default async function DeleteReseller({ params }: { params: { id: string } }) {
   const isOwner = await checkUserRole('owner');
-  
   if (!isOwner) {
     redirect('/reseller');
   }
 
   const reseller = await getResellerById(params.id);
-
   if (!reseller) {
     notFound();
   }

@@ -28,11 +28,7 @@ interface ArticlesResponse {
 async function getArticles(page: number = 1, pageSize: number = 5, search?: string, categoryId?: number): Promise<ArticlesResponse> {
   try {
     const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
-    // Build the URL for fetching articles with pagination and optional filters
-    let url = `${STRAPI_URL}/api/articles?populate[0]=image&populate[1]=article_category&populate[2]=comments&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
-    
-    // Add sort parameter to display newest articles first (by publishedAt or createdAt date)
-    url += `&sort[0]=publishedAt:desc`;
+    let url = `${STRAPI_URL}/api/articles?populate[0]=image&populate[1]=article_category&populate[2]=comments&pagination[page]=${page}&pagination[pageSize]=${pageSize}&sort[0]=publishedAt:desc`;
     
     // Add search filter if present
     if (search) {

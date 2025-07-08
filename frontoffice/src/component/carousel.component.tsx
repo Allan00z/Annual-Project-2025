@@ -11,7 +11,6 @@ const Carousel = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollDirection, setScrollDirection] = useState<"right" | "left">("right");
 
-  // Déplacement du curseur pour tooltip
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
@@ -42,11 +41,9 @@ const Carousel = () => {
       if (!container) return;
   
       const maxScrollLeft = container.scrollWidth - container.clientWidth;
-  
-      // Appliquer le scroll
+      
       container.scrollLeft += scrollDirection === "right" ? scrollSpeed : -scrollSpeed;
   
-      // Détection de fin / début pour inverser
       if (container.scrollLeft >= maxScrollLeft - 1) {
         setScrollDirection("left");
       } else if (container.scrollLeft <= 1) {

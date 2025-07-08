@@ -214,7 +214,6 @@ export default function EditProfile() {
 
       const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
       
-      // Géocoder les adresses
       const deliveryAddressData = formData.deliveryAddress ? await geocodeAddress(formData.deliveryAddress) : null;
       const billingAddressData = formData.billingAddress ? await geocodeAddress(formData.billingAddress) : null;
       
@@ -229,7 +228,6 @@ export default function EditProfile() {
       let response;
       
       if (userData.client) {
-        // Mettre à jour le client existant
         response = await fetch(`${STRAPI_URL}/api/clients/${userData.client.documentId}`, {
           method: 'PUT',
           headers: {
@@ -239,7 +237,6 @@ export default function EditProfile() {
           body: JSON.stringify({ data: clientData }),
         });
       } else {
-        // Créer un nouveau client avec la relation bidirectionnelle
         response = await fetch(`${STRAPI_URL}/api/clients`, {
           method: 'POST',
           headers: {
@@ -256,18 +253,14 @@ export default function EditProfile() {
 
       setSuccess('Profil mis à jour avec succès ! Vous allez être redirigé vers votre compte.');
       
-      // Scroll vers le haut après succès
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Rediriger vers la page de compte après un délai
+
       setTimeout(() => {
         router.push('/account');
       }, 2000);
       
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de la sauvegarde');
-      
-      // Scroll vers le haut après erreur
+      setError(err.message || 'Une erreur est survenue lors de la sauvegarde');      
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsSaving(false);
@@ -289,7 +282,6 @@ export default function EditProfile() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          {/* Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex items-center justify-between">
               <div>
@@ -305,7 +297,6 @@ export default function EditProfile() {
             </div>
           </div>
 
-          {/* Messages d'erreur et de succès */}
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               <p className="font-bold">Erreur</p>
@@ -320,11 +311,9 @@ export default function EditProfile() {
             </div>
           )}
 
-          {/* Formulaire */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Prénom */}
                 <div>
                   <label htmlFor="firstname" className="block text-sm font-medium text-gray-700 mb-1">
                     Prénom *
@@ -341,7 +330,6 @@ export default function EditProfile() {
                   />
                 </div>
 
-                {/* Nom */}
                 <div>
                   <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-1">
                     Nom *
@@ -359,7 +347,6 @@ export default function EditProfile() {
                 </div>
               </div>
 
-              {/* Adresse de livraison */}
               <div>
                 <label htmlFor="deliveryAddress" className="block text-sm font-medium text-gray-700 mb-1">
                   Adresse de livraison
@@ -378,7 +365,6 @@ export default function EditProfile() {
                 </p>
               </div>
 
-              {/* Adresse de facturation */}
               <div>
                 <label htmlFor="billingAddress" className="block text-sm font-medium text-gray-700 mb-1">
                   Adresse de facturation
@@ -396,7 +382,6 @@ export default function EditProfile() {
                   Exemple: 123 Rue de la Paix, 75001 Paris, France
                 </p>
               </div>
-              {/* Note */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
                     <div className="flex items-center">
                     <div className="flex-shrink-0">
@@ -418,7 +403,6 @@ export default function EditProfile() {
                     </div>
                 </div>
 
-              {/* Informations sur le compte */}
               <div className="border-t pt-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Informations du compte</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -444,7 +428,6 @@ export default function EditProfile() {
                 </p>
               </div>
 
-              {/* Boutons */}
               <div className="flex justify-end space-x-4 pt-6">
                 <button
                   type="button"

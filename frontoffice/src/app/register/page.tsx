@@ -22,6 +22,7 @@ export default function Register() {
       router.push("/");
     }
   }, [router]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
@@ -43,7 +44,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const authResponse = await AuthService.register(username, email, password);
+      await AuthService.register(username, email, password);
       setSuccess("Inscription réussie ! Un email de confirmation a été envoyé à votre adresse. Veuillez vérifier votre boîte de réception.");
     } catch (error) {
       console.error("Erreur d'inscription:", error);

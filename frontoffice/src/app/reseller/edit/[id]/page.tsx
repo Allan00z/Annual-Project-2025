@@ -13,6 +13,11 @@ interface ApiResponse {
   data: Reseller;
 }
 
+/**
+ * Fetches a reseller by its ID from the Strapi API.
+ * @param documentId - The ID of the reseller to fetch.
+ * @returns A promise that resolves to the reseller data or null if not found.
+ */
 async function getResellerById(documentId: string): Promise<Reseller | null> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {

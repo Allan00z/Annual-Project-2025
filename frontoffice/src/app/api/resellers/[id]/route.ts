@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
+/**
+ * Route to handle the modification of a reseller in Strapi.
+ * This route checks if the user is authenticated and has the 'owner' role before allowing modifications or deletions.
+ */
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -73,8 +77,11 @@ export async function PUT(
   }
 }
 
+/**
+ * Route to handle the deletion of a reseller in Strapi.
+ * This route checks if the user is authenticated and has the 'owner' role before allowing deletion.
+ */
 export async function DELETE(
-  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

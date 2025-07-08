@@ -13,6 +13,11 @@ export interface QuestionsResponse {
   }
 }
 
+/**
+ * Gets the list of questions from the Strapi API.
+ * @returns {Promise<Question[]>} A promise that resolves to an array of questions.
+ * @throws {Error} If the fetch operation fails or the response is not ok.
+ */
 async function getQuestions(): Promise<Question[]> {
   const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
   try {
