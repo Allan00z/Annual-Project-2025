@@ -60,7 +60,7 @@ export default function ProductPage() {
     if (existingItemIndex >= 0) {
       existingCart[existingItemIndex].quantity += quantity;
     } else {
-      existingCart.push({id: 0, createdAt: "", updatedAt: "", quantity: quantity, product: product});
+      existingCart.push({id: 0, createdAt: "", updatedAt: "", quantity: quantity, product: product, documentId: ""});
     }
     
     localStorage.setItem("cart", JSON.stringify(existingCart));

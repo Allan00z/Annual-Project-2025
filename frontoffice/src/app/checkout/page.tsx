@@ -16,19 +16,22 @@ export default function Checkout() {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [isGeocoded, setIsGeocoded] = useState(false);
   const [formData, setFormData] = useState<Order>({
     id: 2,
+    documentId: "",
     createdAt: "",
     updatedAt: "",
     ordered_products: [],
     client: {
       firstname: "",
       lastname: "",
-      billingAddress: {lat: 0, lng: 0},
-      deliveryAddress: {lat: 0, lng: 0},
+      billingAddress: { lat: 0, lng: 0 },
+      deliveryAddress: { lat: 0, lng: 0 },
       createdAt: "",
       updatedAt: "",
-      id: 0
+      id: 0,
+      documentId: ""
     }
   });
 
@@ -58,6 +61,20 @@ export default function Checkout() {
       setUserEmail(currentUser.email);
     }
   }, [router]);
+
+  const isFormValid = () => {
+    return (
+      formData.client?.firstname?.trim() &&
+      formData.client?.lastname?.trim() &&
+      userEmail.trim() &&
+      addressFields.street.trim() &&
+      addressFields.postalCode.trim() &&
+      addressFields.city.trim() &&
+      isGeocoded &&
+      formData.client?.deliveryAddress?.lat !== 0 &&
+      formData.client?.deliveryAddress?.lng !== 0
+    );
+  };
 
   const handleGeocoding = async () => {
     const { street, postalCode, city } = addressFields;
@@ -97,20 +114,36 @@ export default function Checkout() {
             }
           }
         });
+        setIsGeocoded(true);
+        setErrorMessage("Adresse géocodée avec succès !");
+      } else {
+        setErrorMessage("Adresse non trouvée. Veuillez vérifier votre adresse.");
       }
     } catch (error) {
       console.error('Erreur lors du géocodage:', error);
+      setErrorMessage("Erreur lors du géocodage. Veuillez réessayer.");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    OrderService.confirmOrder(formData);
+    if (!isGeocoded || formData.client?.deliveryAddress?.lat === 0 || formData.client?.deliveryAddress?.lng === 0) {
+      setErrorMessage("Veuillez géocoder votre adresse avant de confirmer la commande.");
+      return;
+    }
     
-    localStorage.removeItem("cart");
-    OrderService.redirectToConfirmation();
+    try {
+      console.log("Submitting order:", formData);
+      await OrderService.confirmOrder(formData);
+      localStorage.removeItem("cart");
+      OrderService.redirectToConfirmation();
+    } catch (error) {
+      console.error("Error confirming order:", error);
+      setErrorMessage("Erreur lors de la confirmation de la commande.");
+    }
   };
+
 
   const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -118,6 +151,7 @@ export default function Checkout() {
       ...prev,
       [name]: value
     }));
+    setIsGeocoded(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,7 +237,7 @@ export default function Checkout() {
                 />
               </div>
               {errorMessage && (
-                <div className="text-red-500 text-sm">{errorMessage}</div>
+                <div className={`text-sm ${isGeocoded ? 'text-green-500' : 'text-red-500'}`}>{errorMessage}</div>
               )}
               <div className="flex justify-center">
                 <button
@@ -216,7 +250,8 @@ export default function Checkout() {
               </div>
               <button
                 type="submit"
-                className="btn bg-[#303028] text-white hover:bg-[#404038] border-none w-full"
+                className="btn bg-[#303028] text-white hover:bg-[#404038] border-none w-full disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={!isFormValid()}
               >
                 Confirmer la commande
               </button>
