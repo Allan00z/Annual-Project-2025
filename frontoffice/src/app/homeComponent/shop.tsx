@@ -19,7 +19,7 @@ const Shop = () => {
     <section>
       <div className="relative flex flex-col items-center py-20 bg-[#f7c0a6] w-full overflow-hidden rounded-xl">
         <div className="overflow-x-hidden w-full">
-          <p className="whitespace-nowrap text-2xl animate-marquee overflow-x text-[#BF7451]">
+          <p className="whitespace-nowrap text-s animate-marquee overflow-x text-[#BF7451]">
             les catégories • • • • • les catégories • • • • • les catégories • •
             • • • les catégories • • • • • les catégories • • • • • les
             catégories • • • • • les catégories • • • • • les catégories • • • •
@@ -36,17 +36,29 @@ const Shop = () => {
             className="rounded-lg"
           />
           <div className="flex flex-col text-center space-y-6">
-            <h2 className={"text-4xl md:text-5xl hover:text-orange-400 font-bold cursor-pointer"}>
+            <h2
+              className={
+                "text-4xl md:text-5xl hover:text-orange-400 font-bold cursor-pointer"
+              }
+            >
               Bandeaux -
             </h2>
-            <h2 className={"text-4xl md:text-5xl hover:text-orange-400 font-bold cursor-pointer"}>
+            <h2
+              className={
+                "text-4xl md:text-5xl hover:text-orange-400 font-bold cursor-pointer"
+              }
+            >
               Bonnets -
             </h2>
-            <h2 className={"text-4xl md:text-5xl hover:text-orange-400 font-bold cursor-pointer"}>
+            <h2
+              className={
+                "text-4xl md:text-5xl hover:text-orange-400 font-bold cursor-pointer"
+              }
+            >
               Accessoires -
             </h2>
             <a href="/shop">
-              <button className="bg-black text-white px-6 py-4 rounded-lg mt-8 hover:bg-black-800 hover:text-orange-400 transition">
+              <button className="bg-black text-white px-6 py-4 rounded-lg mt-8 hover:bg-black-800 hover:text-[#fc9c6f] transition">
                 Voir la boutique
               </button>
             </a>
@@ -61,7 +73,7 @@ const Shop = () => {
           />
         </div>
         <div className="mt-16 overflow-x-hidden w-full">
-          <p className="whitespace-nowrap text-2xl animate-marquee overflow-x text-[#BF7451]">
+          <p className="whitespace-nowrap text-s animate-marquee overflow-x text-[#BF7451]">
             les catégories • • • • • les catégories • • • • • les catégories • •
             • • • les catégories • • • • • les catégories • • • • • les
             catégories • • • • • les catégories • • • • • les catégories • • • •
@@ -106,9 +118,9 @@ const Shop = () => {
                 </p>
                 <div className="flex flex-row">
                   {produit.promo && produit.ancienPrix && (
-                      <p className="text-black/30 text-lg mt-1 line-through mr-2">
-                        {produit.ancienPrix}
-                      </p>
+                    <p className="text-black/30 text-lg mt-1 line-through mr-2">
+                      {produit.ancienPrix}
+                    </p>
                   )}
                   <p className="text-orange-300 text-lg mt-1">
                     {produit.price}
@@ -117,7 +129,7 @@ const Shop = () => {
               </div>
 
               {/* Bouton */}
-              <button className="mt-3 bg-[#f7c0a6] text-black hover:text-orange-400 px-4 py-2 rounded-md w-full">
+              <button className="mt-3 bg-[#f7c0a6] text-black hover:bg-[#fc9c6f] px-4 py-2 rounded-md w-full transition cursor-pointer">
                 Ajouter au panier
               </button>
             </div>

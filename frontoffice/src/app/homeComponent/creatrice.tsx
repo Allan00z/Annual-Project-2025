@@ -28,7 +28,7 @@ const Creatrice = () => {
           mon univers.
         </p>
         <a href="/about" className="flex justify-center md:justify-start">
-          <button className="btn border-none mt-6 bg-[#f7c0a6] text-black hover:text-orange-400 transition">
+          <button className="btn border-none mt-6 bg-[#f7c0a6] text-black hover:bg-[#fc9c6f] transition">
             En savoir plus
           </button>
         </a>
@@ -43,7 +43,12 @@ const Creatrice = () => {
             className="object-cover rounded-4xl outline-[3px] outline-[#f7c0a6]"
           />
           <div className="absolute w-48 h-64 md:w-64 md:h-80 rounded-4xl overflow-hidden -bottom-10 -right-5 md:-right-30 outline-[5px] outline-white">
-            <Image src={creatrice} alt="créatrice" fill className="absolute object-cover" />
+            <Image
+              src={creatrice}
+              alt="créatrice"
+              fill
+              className="absolute object-cover"
+            />
           </div>
         </div>
       </div>

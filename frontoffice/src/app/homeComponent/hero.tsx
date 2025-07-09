@@ -13,13 +13,15 @@ const Hero = () => {
         <div className="relative container mx-auto px-6 md:px-10">
           <div className="max-w-lg">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight text-[#f7c0a6]">
-              Des créations <span className="text-white">uniques</span> au crochet
+              Des créations <span className="text-white">uniques</span> au
+              crochet
             </h1>
             <p className="mt-4 text-lg text-white">
-              Chaque pièce est soigneusement confectionnée à la main dans les Hautes-Alpes.
+              Chaque pièce est soigneusement confectionnée à la main dans les
+              Hautes-Alpes.
             </p>
             <a href="/shop">
-              <button className="btn border-none mt-6 bg-[#F7C0A6] text-black hover:text-orange-400 transition rounded-md cursor-pointer">
+              <button className="btn border-none mt-6 bg-[#F7C0A6] text-black hover:bg-[#fc9c6f] transition rounded-md cursor-pointer transition">
                 Découvrir la boutique
               </button>
             </a>
