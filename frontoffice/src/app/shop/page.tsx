@@ -160,8 +160,8 @@ export default function Shop() {
           <div className="flex flex-wrap justify-between gap-6">
             {filteredProducts.map((product, i) => (
               <CardComponent
-                key={product.id}
-                image={productsData[i]?.image}
+                id={product.documentId}
+                image={product?.image}
                 title={product.name}
                 description={product.description}
                 price={product.price}

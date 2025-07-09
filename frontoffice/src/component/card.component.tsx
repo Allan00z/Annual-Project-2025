@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type CardProps = {
+  id: string;
   image: any;
   title: string;
   description: string;
@@ -10,6 +12,7 @@ type CardProps = {
 };
 
 export default function CardComponent({
+  id,
   image,
   title,
   description,
@@ -17,12 +20,13 @@ export default function CardComponent({
   feedbacks = [],
   handleAddToCart,
 }: CardProps) {
+  const router = useRouter();
   const averageRating = feedbacks.length
     ? feedbacks.reduce((sum, f) => sum + f.grade, 0) / feedbacks.length
     : 0;
 
   return (
-    <div className="card bg-base-100 w-full sm:w-[48%] lg:w-[30%] shadow-sm rounded-xl">
+    <div onClick={() => router.push(`/shop/product/${id}`)} className="card bg-base-100 w-full sm:w-[48%] lg:w-[30%] shadow-sm rounded-xl cursor-pointer">
       <figure className="h-48 overflow-hidden">
         <Image
           src={image}
@@ -55,10 +59,7 @@ export default function CardComponent({
 
         <p>{description}</p>
         <div className="card-actions justify-between items-center">
-          <span className="text-[#BF7451] font-semibold">{price}</span>
-          <button className="bg-[#f7c0a6] px-6 hover:text-orange-400 cursor-pointer py-2 rounded-lg text-black font-bold" onClick={handleAddToCart}>
-            Sélectionner
-          </button>
+          <span className="text-[#BF7451] font-semibold">{price} €</span>
         </div>
       </div>
     </div>
