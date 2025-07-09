@@ -55,11 +55,8 @@ export default function CardComponent({
 
         <p>{description}</p>
         <div className="card-actions justify-between items-center">
-          <span className="text-[#BF7451] font-semibold">{price} €</span>
-          <button
-            className="bg-[#f7c0a6] px-6 py-2 rounded-lg text-white font-bold cursor-pointer"
-            onClick={handleAddToCart}
-          >
+          <span className="text-[#BF7451] font-semibold">{price}</span>
+          <button className="bg-[#f7c0a6] px-6 hover:text-orange-400 cursor-pointer py-2 rounded-lg text-black font-bold" onClick={handleAddToCart}>
             Sélectionner
           </button>
         </div>
