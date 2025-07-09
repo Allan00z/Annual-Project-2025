@@ -68,4 +68,54 @@ export class ProductService {
       throw error;
     }
   }
+
+  /**
+   * Gets a product by its document ID.
+   * @param documentId The document ID of the product to retrieve.
+   * @returns Promise<Product | null> The product if found, otherwise null.
+   */
+  static async getProductByDocumentId(documentId: string): Promise<Product | null> {
+    try {
+      const response = await fetch(`${this.STRAPI_URL}/api/products/${documentId}?populate=*`, {
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error(`Erreur lors de la récupération du produit: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error('Erreur lors de la récupération du produit:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gets multiple products by their document IDs.
+   * @param documentIds Array of document IDs of the products to retrieve.
+   * @returns Promise<Product[]> Array of products found.
+   */
+  static async getProductsByDocumentIds(documentIds: string[]): Promise<Product[]> {
+    try {
+      const products: Product[] = [];
+      
+      // Get each product by its document ID
+      for (const documentId of documentIds) {
+        const product = await this.getProductByDocumentId(documentId);
+        if (product) {
+          products.push(product);
+        }
+      }
+      
+      return products;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des produits:', error);
+      throw error;
+    }
+  }
 }

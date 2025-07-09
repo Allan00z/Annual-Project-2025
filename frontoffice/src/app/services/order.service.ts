@@ -40,7 +40,8 @@ export class OrderService {
     }
 
     // Send the order to the backend API 
-    const response = await fetch("http://localhost:1338/api/orders", {
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/orders`, {
       method: "POST",
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -88,10 +89,11 @@ export class OrderService {
 
       const orderedProductsIds: string[] = [];
       
+      const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
       // Create ordered products first
       if (orderData.ordered_products && orderData.ordered_products.length > 0) {
         for (const orderedProduct of orderData.ordered_products) {
-          const orderedProductResponse = await fetch("http://localhost:1338/api/ordered-products", {
+          const orderedProductResponse = await fetch(`${STRAPI_URL}/api/ordered-products`, {
             method: "POST",
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -115,7 +117,7 @@ export class OrderService {
       }
 
       // Create the order with the ordered products
-      const orderResponse = await fetch("http://localhost:1338/api/orders", {
+      const orderResponse = await fetch(`${STRAPI_URL}/api/orders`, {
         method: "POST",
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -137,7 +139,7 @@ export class OrderService {
 
       // Update each ordered product with the order ID
       for (const orderedProductId of orderedProductsIds) {
-        await fetch(`http://localhost:1338/api/ordered-products/${orderedProductId}`, {
+        await fetch(`${STRAPI_URL}/api/ordered-products/${orderedProductId}`, {
           method: "PUT",
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -226,5 +228,75 @@ export class OrderService {
     }
     
     return details;
+  }
+
+  /**
+   * Gets orders for a specific client
+   * @param clientId - The client document ID
+   * @returns {Promise<Order[]>} - Array of orders for the client
+   */
+  static async getClientOrders(clientId: string): Promise<Order[]> {
+    const token = AuthService.getToken();
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/orders?populate[ordered_products][populate]=product&populate=client&filters[client][documentId][$eq]=${clientId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur lors de la récupération des commandes: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Orders API response:', data);
+    return data.data || [];
+  }
+
+  /**
+   * Gets orders for the current user's client
+   * @returns {Promise<Order[]>} - Array of orders for the current user
+   */
+  static async getCurrentUserOrders(): Promise<Order[]> {
+    const currentUserClient = await AuthService.getCurrentUserClient();
+    console.log('Current user client data:', currentUserClient);
+    
+    if (!currentUserClient || !currentUserClient.client) {
+      console.log('No client found for current user');
+      return [];
+    }
+
+    console.log('Client documentId:', currentUserClient.client.documentId);
+    return this.getClientOrders(currentUserClient.client.documentId);
+  }
+
+  /**
+   * Gets a specific order by its document ID
+   * @param documentId - The order document ID
+   * @returns {Promise<Order>} - The order details
+   */
+  static async getOrderByDocumentId(documentId: string): Promise<Order> {
+    const token = AuthService.getToken();
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/orders/${documentId}?populate[ordered_products][populate]=product&populate=client`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur lors de la récupération de la commande: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.data;
   }
 }

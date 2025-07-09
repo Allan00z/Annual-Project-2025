@@ -335,7 +335,7 @@ export const AuthService = {
       throw new Error("Utilisateur non authentifié");
     }
 
-    const response = await fetch(`${STRAPI_URL}/api/users/me?populate=client`, {
+    const response = await fetch(`${STRAPI_URL}/api/users/me?populate=*`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
