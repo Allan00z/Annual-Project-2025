@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import bandeau from "../../medias/images/crochet-bg_files/bandeau-raye.jpg.webp";
 import bonnet from "../../medias/images/crochet-bg_files/bonnet-avec-pompom.jpg.webp";
-import {products} from "../data/products/products"
+import productsData from "../data/products/products"
 
 const Shop = () => {
   // State to manage hovered category
@@ -11,7 +11,7 @@ const Shop = () => {
   >(null);
 
   // Shuffle products and select 4 random ones
-  const randomProducts = [...products]
+  const randomProducts = [...productsData]
   .sort(() => 0.5 - Math.random())
   .slice(0, 4);
 
