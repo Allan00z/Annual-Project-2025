@@ -7,12 +7,14 @@ import { useState, useEffect } from "react";
 import LogoutButton from "./account-button.component";
 import AuthService from "../app/services/auth.service";
 import Link from "next/link";
+import { useCart } from "../hooks/useCart";
 
 export const NavBar = () => {
   const pathname = usePathname();
   const style = { color: "#e8a499" };
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { cartCount } = useCart();
 
   useEffect(() => {
     setIsLoggedIn(AuthService.isLoggedIn());
@@ -58,7 +60,7 @@ export const NavBar = () => {
         </a>
         <a
           href="/shop/cart"
-          className="btn btn-ghost btn-circle hidden md:flex items-center space-x-4 -translate-y-2"
+          className="btn btn-ghost btn-circle hidden md:flex items-center space-x-4 -translate-y-2 relative"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -73,6 +75,11 @@ export const NavBar = () => {
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9h14l-2-9M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
             />
           </svg>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount > 99 ? '99+' : cartCount}
+            </span>
+          )}
         </a>
 
         {isLoggedIn ? (
@@ -91,7 +98,7 @@ export const NavBar = () => {
 
       <div className="flex items-center space-x-4 md:hidden">
         {/* Cart Icon Mobile */}
-        <a href="/cart" className="btn btn-ghost btn-circle">
+        <a href="/shop/cart" className="btn btn-ghost btn-circle relative">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -105,6 +112,11 @@ export const NavBar = () => {
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9h14l-2-9M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
             />
           </svg>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount > 99 ? '99+' : cartCount}
+            </span>
+          )}
         </a>
 
         {/* Burger Menu */}
@@ -161,7 +173,7 @@ export const NavBar = () => {
             </svg>
           </button>
           <nav className="flex flex-col space-y-4">
-            <a href="/home" className="text-primary">
+            <a href="/" className="text-primary">
               ACCUEIL
             </a>
             <a href="/shop">BOUTIQUE</a>

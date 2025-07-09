@@ -38,6 +38,14 @@ export async function POST(request: NextRequest) {
         result = await mailerService.sendContactResponseEmail(contactTo, message, originalMessage);
         break;
       }
+      case 'order': {
+        const { to: orderTo, orderDetails } = data;
+        console.log('Tentative d\'envoi d\'email de confirmation à:', orderTo);
+        console.log('Détails de la commande:', orderDetails);
+        result = await mailerService.sendOrderConfirmationEmail(orderTo, orderDetails);
+        console.log('Email envoyé avec succès, ID:', result.messageId);
+        break;
+      }
       case 'custom': {
         const { to: customTo, subject, html, attachments } = data;
         result = await mailerService.sendEmail({ to: customTo, subject, html, attachments });

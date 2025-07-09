@@ -98,6 +98,46 @@ class MailerService {
 
     return this.sendEmail({ to, subject, html });
   }
+
+  /**
+   * Send an order confirmation email
+   * @param to Recipient's email address
+   * @param orderDetails Details of the order to be included in the email
+   * @returns Promise with the result of the email sending
+   */
+  async sendOrderConfirmationEmail(to: string, orderDetails: string): Promise<nodemailer.SentMessageInfo> {
+    console.log('Envoi de l\'email de confirmation à:', to);
+    
+    const subject = 'Confirmation de votre commande - Audelweiss';
+    const html = `
+      <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333333; line-height: 1.5;">
+        <div style="text-align: center; padding: 20px 0; background-color: #ffffff; border-bottom: 3px solid #e8a499;">
+          <h1 style="color: #e8a499; font-size: 28px; margin: 0; font-weight: 600;">AUDELWEISS</h1>
+        </div>
+        
+        <div style="background-color: #ffffff; padding: 30px 20px; border-radius: 5px; margin-top: 20px;">
+          <h2 style="color: #333333; font-size: 22px; margin: 0 0 20px 0;">Merci pour votre commande !</h2>
+          
+          <p>Bonjour,</p>
+          
+          <p>Votre commande a été confirmée avec succès. Voici les détails :</p>
+          <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #e8a499; margin-bottom: 20px;">
+            <pre style="margin: 0; white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 14px;">${orderDetails}</pre>
+          </div>
+          <p>Nous vous remercions pour votre confiance et restons à votre disposition pour toute question.</p>
+          
+          <p>Cordialement,<br><strong>L'équipe Audelweiss</strong></p>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; color: #777777; font-size: 14px; margin-top: 20px; border-top: 1px solid #eeeeee;">
+          <p>Pour toute question supplémentaire, n'hésitez pas à nous recontacter.</p>
+          <p><strong>L'équipe Audelweiss</strong></p>
+        </div>
+      </div>
+    `;
+
+    return this.sendEmail({ to, subject, html });
+  }
 }
 
 export const mailerService = new MailerService();

@@ -2,20 +2,25 @@
 
 import products from "@/app/data/carousel/carousel";
 import { InputNumber } from "@/component/inputNumber.component";
-import { CartProduct } from "@/models";
 import { useEffect, useState } from "react";
+import { OrderService } from "@/app/services/order.service";
+import AuthService from "@/app/services/auth.service";
+import { OrderedProduct } from "@/models";
 
 export default function Cart() {
-  const [cart, setCart] = useState<CartProduct[]>([]);
+  const [cart, setCart] = useState<OrderedProduct[]>([]);
   const [price, setPrice] = useState(0);
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState<any>(null);
   const [promoError, setPromoError] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const updateCart = (updatedCart: CartProduct[]) => {
+  const updateCart = (updatedCart: OrderedProduct[]) => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Trigger a custom event to notify other components that the cart has been updated    
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
   };
 
   const clearCart = () => {
@@ -25,10 +30,11 @@ export default function Cart() {
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") ?? "[]");
     setCart(storedCart);
+    setIsLoggedIn(AuthService.isLoggedIn());
   }, []);
 
   useEffect(() => {
-    const total = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    const total = cart.reduce((sum, item) => sum + ((item.product?.price ?? 0) * item.quantity), 0);
     setPrice(total);
   }, [cart])
 
@@ -48,7 +54,7 @@ export default function Cart() {
         if (now >= start && now <= end) {
           // Check if the product associated with the promo is in the cart
           if (promo.product) {
-            const productInCart = cart.some(item => item.product.id === promo.product.id);
+            const productInCart = cart.some(item => item.product?.id === promo.product.id);
             console.log(productInCart);
             if (!productInCart) {
               setPromoError('Ce code promo ne s\'applique pas aux produits de votre panier');
@@ -161,9 +167,20 @@ export default function Cart() {
                     </div>
                   )}
                 </div>
-                <button className="btn bg-[#303028] text-white hover:bg-[#404038] border-none w-full mt-4 px-6 py-3 whitespace-nowrap">
-                  Procéder à la commande
-                </button>
+                {isLoggedIn ? (
+                  <button
+                    onClick={() => OrderService.redirectToCheckout()}
+                    className="btn bg-[#303028] text-white hover:bg-[#404038] border-none w-full mt-4 px-6 py-3 whitespace-nowrap">
+                    Procéder à la commande
+                  </button>
+                ) : (
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-gray-600 mb-2">Vous devez être connecté pour passer commande</p>
+                    <a href="/login" className="btn btn-outline btn-error w-full">
+                      Se connecter
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -174,20 +191,22 @@ export default function Cart() {
   );
 }
 
-const ProductLine = ({item, updateCart, cart} : {item: CartProduct, updateCart: (cart: CartProduct[]) => void, cart: CartProduct[]}) => {
+const ProductLine = ({item, updateCart, cart} : {item: OrderedProduct, updateCart: (cart: OrderedProduct[]) => void, cart: OrderedProduct[]}) => {
   const changeQuantity = (quantity: string) => {
     const newQuantity = Number(quantity);
     const updatedCart = cart.map(cartItem => 
-      cartItem.product.name === item.product.name ? {...cartItem, quantity: newQuantity} : cartItem
+      cartItem.product?.name === item.product?.name ? {...cartItem, quantity: newQuantity} : cartItem
     );
     updateCart(updatedCart);
   }
 
   const deleteItem = () => {
-    const updatedCart = cart.filter(cartItem => cartItem.product.name !== item.product.name);
+    const updatedCart = cart.filter(cartItem => cartItem.product?.name !== item.product?.name);
     updateCart(updatedCart);
   }
-
+  if (!item.product) {
+    return;
+  }
   return (
     <tr>
       <td>
