@@ -385,7 +385,7 @@ export default function ProductPage() {
             
             <button 
               onClick={addToCart}
-              className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 font-medium"
+              className="w-full text-black hover:text-orange-400 bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 font-medium"
             >
               {added ? "✓ Ajouté !" : `Ajouter au panier - ${(product.price * quantity).toFixed(2)}€`}
             </button>

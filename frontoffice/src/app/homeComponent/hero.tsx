@@ -19,7 +19,7 @@ const Hero = () => {
               Chaque pièce est soigneusement confectionnée à la main dans les Hautes-Alpes.
             </p>
             <a href="/shop">
-              <button className="btn border-none mt-6 bg-[#F7C0A6] text-white hover:bg-white hover:text-black transition rounded-md cursor-pointer">
+              <button className="btn border-none mt-6 bg-[#F7C0A6] text-black hover:text-orange-400 transition rounded-md cursor-pointer">
                 Découvrir la boutique
               </button>
             </a>

@@ -28,7 +28,7 @@ const Creatrice = () => {
           mon univers.
         </p>
         <a href="/about" className="flex justify-center md:justify-start">
-          <button className="btn border-none mt-6 bg-[#f7c0a6] text-white hover:bg-white hover:text-black transition">
+          <button className="btn border-none mt-6 bg-[#f7c0a6] text-black hover:text-orange-400 transition">
             En savoir plus
           </button>
         </a>
