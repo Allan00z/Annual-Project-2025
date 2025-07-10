@@ -1,19 +1,39 @@
 import Image from "next/image";
 import React, { useState } from "react";
+import { useEffect } from "react";
 import bandeau from "../../medias/images/crochet-bg_files/bandeau-raye.jpg.webp";
 import bonnet from "../../medias/images/crochet-bg_files/bonnet-avec-pompom.jpg.webp";
-import productsData from "../data/products/products"
+import { useRouter } from "next/navigation";
 
 const Shop = () => {
   // State to manage hovered category
   const [hovered, setHovered] = useState<
     "bandeaux" | "bonnets" | "accessoires" | null
   >(null);
-
+  const [productsData, setProducts] = useState<any[]>([]);
+  useEffect(() => {
+    fetchProducts().then((fetchedProducts) => {
+      setProducts(fetchedProducts);
+    });
+  }, []);
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:1338/api/products?populate=product_categories&populate=feedbacks"
+      );
+      if (!response.ok) throw new Error("Failed to fetch products");
+      const res = await response.json();
+      return res.data || [];
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
+  };
+  const router = useRouter();
   // Shuffle products and select 4 random ones
   const randomProducts = [...productsData]
-  .sort(() => 0.5 - Math.random())
-  .slice(0, 4);
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 4);
 
   return (
     <section>
@@ -95,7 +115,8 @@ const Shop = () => {
           {randomProducts.map((produit: any) => (
             <div
               key={produit.id}
-              className="flex flex-col items-center w-56 h-full mx-auto md:mx-0"
+              onClick={() => router.push(`/shop/product/${produit.id}`)}
+              className="flex flex-col items-center w-56 h-full mx-auto md:mx-0 cursor-pointer hover:bg-gray-50"
             >
               <div className="relative w-full h-64 rounded-xl overflow-hidden border border-neutral-200">
                 {produit.promo && produit.ancienPrix && (
