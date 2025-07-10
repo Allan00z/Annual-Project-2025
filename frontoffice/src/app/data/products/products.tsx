@@ -6,7 +6,7 @@
   import bandeauIntemporel from "../../../medias/images/Boutique/bandeau-intemporel-300x300.jpg.webp";
   import roseEternel from "../../../medias/images/Boutique/PXL_20250321_112140078.MP2_-300x300.jpg"
   
-  export const products = [
+  const productsData = [
     {
       id: 1,
       title: "Bandeaux en coton",
@@ -64,3 +64,5 @@
       promo: true
     },
   ];
+
+  export default productsData;

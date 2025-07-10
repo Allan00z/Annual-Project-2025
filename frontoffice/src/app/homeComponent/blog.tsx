@@ -25,17 +25,22 @@ const Blog = () => {
             />
             <div
               className="absolute inset-0 z-10"
-              style={{ backgroundColor: "rgba(247, 192, 166, 0.6)" }}
+              style={{
+                backgroundColor: "rgba(247, 192, 166, 0.6)",
+                filter: "brightness(50%)",
+              }}
             />
-            <div className="relative z-20 card-body flex flex-col justify-end text-black">
+
+            {/* Contenu */}
+            <div className="relative z-20 card-body flex flex-col justify-end text-white">
               <div className="badge badge-neutral w-fit p-4 mb-2 absolute top-5 text-lg">
                 {post.category}
               </div>
-              <h2 className="card-title pr-4 absolute top-25 text-white text-3xl">
+              <h2 className="card-title pr-4 absolute top-25 text-3xl">
                 {post.title}
               </h2>
               <span className="border-white border-1"></span>
-              <div className="flex items-center opacity-80 mt-4 text-white text-xl">
+              <div className="flex items-center mt-4 text-xl">
                 <span className="mr-2">📅</span> {post.date}
               </div>
             </div>
