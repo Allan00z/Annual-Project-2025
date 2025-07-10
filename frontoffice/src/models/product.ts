@@ -9,7 +9,7 @@ export interface Product extends StrapiBase {
   description: string;
   price: number;
   product_categories?: ProductCategory[];
-  option?: Option;
+  options?: Option[];
   discounts?: Discount[];
   feedbacks?: Feedback[];
 }

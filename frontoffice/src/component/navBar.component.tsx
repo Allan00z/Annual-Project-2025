@@ -8,6 +8,7 @@ import LogoutButton from "./account-button.component";
 import AuthService from "../app/services/auth.service";
 import Link from "next/link";
 import { useCart } from "../hooks/useCart";
+import AdminLink from "./AdminLink";
 
 export const NavBar = () => {
   const pathname = usePathname();
@@ -58,6 +59,7 @@ export const NavBar = () => {
         <a href="/blog" style={pathname.startsWith("/blog") ? style : {}}>
           BLOG
         </a>
+        <AdminLink />
         <a
           href="/shop/cart"
           className="btn btn-ghost btn-circle hidden md:flex items-center space-x-4 -translate-y-2 relative"
@@ -180,6 +182,7 @@ export const NavBar = () => {
             <a href="/creations">CRÉATIONS</a>
             <a href="/about">À PROPOS</a>
             <a href="/blog">BLOG</a>
+            <AdminLink mobile={true} />
 
             {isLoggedIn ? (
               <div className="pt-4">

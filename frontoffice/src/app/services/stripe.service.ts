@@ -175,7 +175,10 @@ export class StripeService {
    */
   static calculateTotal(order: Order): number {
     return order.ordered_products?.reduce((total, item) => {
-      return total + ((item.product?.price ?? 0) * item.quantity);
+      const basePrice = item.product?.price ?? 0;
+      const optionPrice = item.option?.priceModifier ?? 0;
+      const finalPrice = basePrice + optionPrice;
+      return total + (finalPrice * item.quantity);
     }, 0) ?? 0;
   }
 

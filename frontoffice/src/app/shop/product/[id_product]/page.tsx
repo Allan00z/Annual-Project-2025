@@ -14,6 +14,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const [hasOrderedProduct, setHasOrderedProduct] = useState(false);
   const [userFeedback, setUserFeedback] = useState<Feedback | null>(null);
@@ -35,7 +36,7 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`, {
+        const response = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate=*`, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -140,17 +141,47 @@ export default function ProductPage() {
     return price;
   };
 
+  // Function to calculate the final price with selected option
+  const calculateFinalPrice = () => {
+    if (!product) return 0;
+    
+    let basePrice = calculateDiscountedPrice(product.price, product.discounts);
+    
+    if (selectedOption && product.options) {
+      const option = product.options.find(opt => opt.documentId === selectedOption);
+      if (option) {
+        basePrice += option.priceModifier;
+      }
+    }
+    
+    return basePrice;
+  };
+
   // Function to add the product to the cart
   const addToCart = () => {
     if (!product) return;
     
+    const selectedOptionObj = selectedOption && product.options ? 
+      product.options.find(opt => opt.documentId === selectedOption) : undefined;
+    
     const existingCart: OrderedProduct[] = JSON.parse(localStorage.getItem("cart") ?? "[]");
-    const existingItemIndex = existingCart.findIndex(item => item.product?.documentId === product.documentId);
+    const existingItemIndex = existingCart.findIndex(item => 
+      item.product?.documentId === product.documentId && 
+      item.option?.documentId === selectedOption
+    );
     
     if (existingItemIndex >= 0) {
       existingCart[existingItemIndex].quantity += quantity;
     } else {
-      existingCart.push({id: 0, createdAt: "", updatedAt: "", quantity: quantity, product: product, documentId: ""});
+      existingCart.push({
+        id: 0, 
+        createdAt: "", 
+        updatedAt: "", 
+        quantity: quantity, 
+        product: product, 
+        option: selectedOptionObj,
+        documentId: ""
+      });
     }
     
     localStorage.setItem("cart", JSON.stringify(existingCart));
@@ -198,7 +229,7 @@ export default function ProductPage() {
         setShowFeedbackForm(false);
         setNewFeedback({ grade: 5, content: '' });
         
-        const productResponse = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`);
+        const productResponse = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate=*`);
         const productData = await productResponse.json();
         setProduct(productData.data);
       } else {
@@ -244,7 +275,7 @@ export default function ProductPage() {
         setEditingFeedback(false);
         setEditFeedback({ grade: 5, content: '' });
         
-        const productResponse = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate[0]=product_categories&populate[1]=discounts&populate[2]=option&populate[3]=feedbacks&populate[4]=feedbacks.client`);
+        const productResponse = await fetch(`${STRAPI_URL}/api/products/${id_product}?populate=*`);
         const productData = await productResponse.json();
         setProduct(productData.data);
       } else {
@@ -273,6 +304,7 @@ export default function ProductPage() {
 
   const discountedPrice = calculateDiscountedPrice(product.price, product.discounts);
   const hasDiscount = discountedPrice !== product.price;
+  const finalPrice = calculateFinalPrice();
 
   const calculateAverageRating = () => {
     if (!product.feedbacks || product.feedbacks.length === 0) return 0;
@@ -359,13 +391,32 @@ export default function ProductPage() {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <span className="text-3xl font-bold text-primary">
-                {product.price.toFixed(2)}€
+                {finalPrice.toFixed(2)}€
               </span>
+              {hasDiscount && (
+                <span className="text-lg text-muted-foreground line-through">
+                  {product.price.toFixed(2)}€
+                </span>
+              )}
             </div>
-            {product.option && (
-              <p className="text-sm text-muted-foreground">
-                Option: {product.option.name} (+{product.option.priceModifier}€)
-              </p>
+            {product.options && product.options.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Options disponibles:
+                </label>
+                <select
+                  value={selectedOption || ''}
+                  onChange={(e) => setSelectedOption(e.target.value || null)}
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="">Aucune option (+0€)</option>
+                  {product.options.map(option => (
+                    <option key={option.documentId} value={option.documentId}>
+                      {option.name} ({option.priceModifier >= 0 ? '+' : ''}{option.priceModifier}€)
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
           </div>
 
@@ -393,7 +444,7 @@ export default function ProductPage() {
               onClick={addToCart}
               className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 font-medium"
             >
-              {added ? "✓ Ajouté !" : `Ajouter au panier - ${(product.price * quantity).toFixed(2)}€`}
+              {added ? "✓ Ajouté !" : `Ajouter au panier - ${(finalPrice * quantity).toFixed(2)}€`}
             </button>
           </div>
         </div>

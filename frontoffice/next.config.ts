@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  env: {
+    STRAPI_URL: process.env.STRAPI_URL || 'http://localhost:1338',
+  },
 };
 
 export default nextConfig;

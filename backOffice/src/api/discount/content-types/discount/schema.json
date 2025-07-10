@@ -30,9 +30,9 @@
     "code": {
       "type": "string"
     },
-    "product": {
+    "products": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::product.product",
       "inversedBy": "discounts"
     }

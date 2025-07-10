@@ -22,6 +22,9 @@
       "relation": "oneToMany",
       "target": "api::ordered-product.ordered-product",
       "mappedBy": "order"
+    },
+    "done": {
+      "type": "boolean"
     }
   }
 }

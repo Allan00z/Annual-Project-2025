@@ -69,9 +69,11 @@ export default function OrderDetail() {
       const productDetail = orderedProduct.product?.documentId 
         ? productDetails[orderedProduct.product.documentId] 
         : null;
-      const price = productDetail?.price || orderedProduct.product?.price || 0;
+      const basePrice = productDetail?.price || orderedProduct.product?.price || 0;
+      const optionPrice = orderedProduct.option?.priceModifier || 0;
+      const finalPrice = basePrice + optionPrice;
       const quantity = orderedProduct.quantity || 0;
-      return total + (price * quantity);
+      return total + (finalPrice * quantity);
     }, 0);
   };
 
@@ -197,7 +199,9 @@ export default function OrderDetail() {
                   ? productDetails[orderedProduct.product.documentId] 
                   : null;
                 const finalProduct = productDetail || orderedProduct.product;
-                const price = productDetail?.price || orderedProduct.product?.price || 0;
+                const basePrice = productDetail?.price || orderedProduct.product?.price || 0;
+                const optionPrice = orderedProduct.option?.priceModifier || 0;
+                const finalPrice = basePrice + optionPrice;
                 
                 return (
                   <div key={index} className="flex items-center justify-between p-4 border border-base-300 rounded-lg">
@@ -214,17 +218,22 @@ export default function OrderDetail() {
                             {finalProduct.description}
                           </p>
                         )}
+                        {orderedProduct.option && (
+                          <p className="text-sm text-base-content/60 mb-1">
+                            Option: {orderedProduct.option.name} ({orderedProduct.option.priceModifier >= 0 ? '+' : ''}{orderedProduct.option.priceModifier}€)
+                          </p>
+                        )}
                         <p className="text-base-content/70">
                           Quantité: {orderedProduct.quantity}
                         </p>
                         <p className="text-sm text-base-content/60">
-                          Prix unitaire: {price.toFixed(2)} €
+                          Prix unitaire: {finalPrice.toFixed(2)} €
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-lg">
-                        {(price * orderedProduct.quantity).toFixed(2)} €
+                        {(finalPrice * orderedProduct.quantity).toFixed(2)} €
                       </p>
                     </div>
                   </div>

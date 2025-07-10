@@ -21,9 +21,9 @@
       "type": "decimal",
       "min": 0
     },
-    "option": {
+    "options": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::option.option",
       "mappedBy": "product"
     },
@@ -35,9 +35,9 @@
     },
     "discounts": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::discount.discount",
-      "mappedBy": "product"
+      "mappedBy": "products"
     },
     "feedbacks": {
       "type": "relation",

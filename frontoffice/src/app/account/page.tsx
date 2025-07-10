@@ -6,6 +6,7 @@ import { OrderService } from '../services/order.service';
 import { ProductService } from '../services/product.service';
 import { Order as OrderModel } from '../../models/order';
 import { Product } from '../../models/product';
+import { Option } from '../../models/option';
 
 interface UserData {
   id: number;
@@ -63,6 +64,7 @@ interface OrderedProduct {
   updatedAt: string;
   publishedAt: string;
   product?: Product;
+  option?: Option;
 }
 
 interface ExtendedOrderedProduct {
@@ -73,6 +75,7 @@ interface ExtendedOrderedProduct {
   updatedAt: string;
   publishedAt?: string;
   product?: Product;
+  option?: Option;
 }
 
 interface ExtendedOrder extends Omit<OrderModel, 'ordered_products'> {
@@ -90,6 +93,7 @@ export default function Account() {
   const [ordersPerPage] = useState<number>(5);  
   const [sortBy, setSortBy] = useState<'date' | 'id' | 'products'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [activeTab, setActiveTab] = useState<'ongoing' | 'completed'>('ongoing');
   
   const router = useRouter();
 
@@ -128,7 +132,8 @@ export default function Account() {
             createdAt: op.createdAt,
             updatedAt: op.updatedAt,
             publishedAt: op.publishedAt,
-            product: op.product
+            product: op.product,
+            option: op.option
           }))
         }));
         
@@ -146,7 +151,16 @@ export default function Account() {
 
   useEffect(() => {
     if (orders.length > 0) {
-      const sorted = [...orders].sort((a, b) => {
+      // Filter orders based on active tab
+      const tabFilteredOrders = orders.filter(order => {
+        if (activeTab === 'ongoing') {
+          return !order.done;
+        } else {
+          return order.done === true;
+        }
+      });
+
+      const sorted = [...tabFilteredOrders].sort((a, b) => {
         switch (sortBy) {
           case 'date':
             const dateA = new Date(a.createdAt);
@@ -165,7 +179,7 @@ export default function Account() {
       setFilteredOrders(sorted);
       setCurrentPage(1);
     }
-  }, [orders, sortBy, sortOrder]);
+  }, [orders, sortBy, sortOrder, activeTab]);
 
   const handleSort = (newSortBy: 'date' | 'id' | 'products') => {
     if (sortBy === newSortBy) {
@@ -174,6 +188,11 @@ export default function Account() {
       setSortBy(newSortBy);
       setSortOrder('desc');
     }
+  };
+
+  const handleTabChange = (tab: 'ongoing' | 'completed') => {
+    setActiveTab(tab);
+    setCurrentPage(1);
   };
 
   const indexOfLastOrder = currentPage * ordersPerPage;
@@ -376,16 +395,53 @@ export default function Account() {
               </div>
 
               <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-gray-900">
                     <span className="inline-block w-6 h-6 bg-green-500 rounded-full mr-2"></span>
                     Historique des commandes
                   </h2>
-                  {filteredOrders.length > 0 && (
+                  {orders.length > 0 && (
                     <div className="text-sm text-gray-600">
-                      {filteredOrders.length} commande{filteredOrders.length > 1 ? 's' : ''} au total
+                      {orders.length} commande{orders.length > 1 ? 's' : ''} au total
                     </div>
                   )}
+                </div>
+
+                <div className="mb-6">
+                  <div className="border-b border-gray-200">
+                    <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                      <button
+                        onClick={() => handleTabChange('ongoing')}
+                        className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                          activeTab === 'ongoing'
+                            ? 'border-blue-500 text-blue-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        Commandes en cours
+                        {orders.filter(order => !order.done).length > 0 && (
+                          <span className="ml-2 bg-blue-100 text-blue-600 py-0.5 px-2 rounded-full text-xs">
+                            {orders.filter(order => !order.done).length}
+                          </span>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleTabChange('completed')}
+                        className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                          activeTab === 'completed'
+                            ? 'border-blue-500 text-blue-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        Commandes terminées
+                        {orders.filter(order => order.done === true).length > 0 && (
+                          <span className="ml-2 bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs">
+                            {orders.filter(order => order.done === true).length}
+                          </span>
+                        )}
+                      </button>
+                    </nav>
+                  </div>
                 </div>
                 
                 {isLoadingOrders ? (
@@ -411,60 +467,90 @@ export default function Account() {
                       </div>
                     </div>
                   </div>
+                ) : filteredOrders.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        {activeTab === 'ongoing' ? 'Aucune commande en cours' : 'Aucune commande terminée'}
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {activeTab === 'ongoing' 
+                          ? 'Vous n\'avez actuellement aucune commande en cours de traitement.'
+                          : 'Vous n\'avez pas encore de commandes terminées.'
+                        }
+                      </p>
+                      {activeTab === 'ongoing' && (
+                        <div className="mt-6">
+                          <button
+                            onClick={() => router.push('/products')}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                          >
+                            Commencer à acheter
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ) : (
                   <>
                     <div className="mb-6 bg-gray-50 p-4 rounded-lg">
-                      <div className="flex flex-wrap items-center gap-4">
-                        <span className="text-sm font-medium text-gray-700">Trier par :</span>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleSort('date')}
-                            className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                              sortBy === 'date'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-white text-gray-700 hover:bg-gray-100'
-                            }`}
-                          >
-                            Date
-                            {sortBy === 'date' && (
-                              <span className="ml-1">
-                                {sortOrder === 'asc' ? '↑' : '↓'}
-                              </span>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => handleSort('id')}
-                            className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                              sortBy === 'id'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-white text-gray-700 hover:bg-gray-100'
-                            }`}
-                          >
-                            N° Commande
-                            {sortBy === 'id' && (
-                              <span className="ml-1">
-                                {sortOrder === 'asc' ? '↑' : '↓'}
-                              </span>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => handleSort('products')}
-                            className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                              sortBy === 'products'
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-white text-gray-700 hover:bg-gray-100'
-                            }`}
-                          >
-                            Nb. Articles
-                            {sortBy === 'products' && (
-                              <span className="ml-1">
-                                {sortOrder === 'asc' ? '↑' : '↓'}
-                              </span>
-                            )}
-                          </button>
+                        <div className="flex flex-wrap items-center gap-4">
+                          <span className="text-sm font-medium text-gray-700">Trier par :</span>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleSort('date')}
+                              className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                                sortBy === 'date'
+                                  ? 'bg-blue-500 text-white'
+                                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                              }`}
+                            >
+                              Date
+                              {sortBy === 'date' && (
+                                <span className="ml-1">
+                                  {sortOrder === 'asc' ? '↑' : '↓'}
+                                </span>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleSort('id')}
+                              className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                                sortBy === 'id'
+                                  ? 'bg-blue-500 text-white'
+                                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                              }`}
+                            >
+                              N° Commande
+                              {sortBy === 'id' && (
+                                <span className="ml-1">
+                                  {sortOrder === 'asc' ? '↑' : '↓'}
+                                </span>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleSort('products')}
+                              className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                                sortBy === 'products'
+                                  ? 'bg-blue-500 text-white'
+                                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                              }`}
+                            >
+                              Nb. Articles
+                              {sortBy === 'products' && (
+                                <span className="ml-1">
+                                  {sortOrder === 'asc' ? '↑' : '↓'}
+                                </span>
+                              )}
+                            </button>
+                          </div>
+                          <div className="ml-auto text-sm text-gray-600">
+                            {filteredOrders.length} commande{filteredOrders.length > 1 ? 's' : ''} {activeTab === 'ongoing' ? 'en cours' : 'terminée' + (filteredOrders.length > 1 ? 's' : '')}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
                     <div className="space-y-4">
                       {currentOrders.map((order) => (
@@ -484,8 +570,12 @@ export default function Account() {
                                 })}
                               </p>
                             </div>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              Confirmée
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              order.done 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-orange-100 text-orange-800'
+                            }`}>
+                              {order.done ? 'Terminée' : 'En cours'}
                             </span>
                           </div>
                           
@@ -507,10 +597,15 @@ export default function Account() {
                                             {orderedProduct.product.description}
                                           </p>
                                         )}
+                                        {orderedProduct.option && (
+                                          <p className="text-xs text-gray-600 mt-1">
+                                            Option: {orderedProduct.option.name} ({orderedProduct.option.priceModifier >= 0 ? '+' : ''}{orderedProduct.option.priceModifier}€)
+                                          </p>
+                                        )}
                                         <div className="flex items-center gap-4 mt-2">
                                           {orderedProduct.product?.price && (
                                             <span className="text-xs text-gray-600">
-                                              Prix unitaire: <span className="font-medium">{orderedProduct.product.price.toFixed(2)} €</span>
+                                              Prix unitaire: <span className="font-medium">{((orderedProduct.product.price) + (orderedProduct.option?.priceModifier || 0)).toFixed(2)} €</span>
                                             </span>
                                           )}
                                         </div>
@@ -521,7 +616,7 @@ export default function Account() {
                                         </div>
                                         {orderedProduct.product?.price && (
                                           <div className="text-sm font-semibold text-gray-900 mt-1">
-                                            Sous-total: {(orderedProduct.product.price * orderedProduct.quantity).toFixed(2)} €
+                                            Sous-total: {(((orderedProduct.product.price) + (orderedProduct.option?.priceModifier || 0)) * orderedProduct.quantity).toFixed(2)} €
                                           </div>
                                         )}
                                       </div>
@@ -537,13 +632,39 @@ export default function Account() {
                                   <span className="text-sm font-medium text-gray-700">Total de la commande</span>
                                   <span className="text-lg font-bold text-gray-900">
                                     {order.ordered_products
-                                      .reduce((total, op) => total + (op.product?.price || 0) * op.quantity, 0)
+                                      .reduce((total, op) => {
+                                        const basePrice = op.product?.price || 0;
+                                        const optionPrice = op.option?.priceModifier || 0;
+                                        return total + ((basePrice + optionPrice) * op.quantity);
+                                      }, 0)
                                       .toFixed(2)} €
                                   </span>
                                 </div>
                               </div>
                             )}
                           </div>
+                          
+                          {!order.done && (
+                            <div className="border-t border-gray-200 pt-3 mt-3">
+                              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                                <div className="flex items-center">
+                                  <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                    </svg>
+                                  </div>
+                                  <div className="ml-3">
+                                    <h4 className="text-sm font-medium text-orange-800">
+                                      Commande en cours de traitement
+                                    </h4>
+                                    <p className="mt-1 text-sm text-orange-700">
+                                      Votre commande est actuellement en cours de préparation. Vous recevrez une notification dès qu'elle sera expédiée.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                           
                           {order.client?.deliveryAddress && (
                             <div className="border-t border-gray-200 pt-3 mt-3">

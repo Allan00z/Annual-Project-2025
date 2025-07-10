@@ -93,18 +93,25 @@ export class OrderService {
       // Create ordered products first
       if (orderData.ordered_products && orderData.ordered_products.length > 0) {
         for (const orderedProduct of orderData.ordered_products) {
+          const requestBody: any = {
+            data: {
+              quantity: orderedProduct.quantity,
+              product: orderedProduct.product?.documentId || orderedProduct.product?.id,
+            }
+          };
+
+          // Add option if it exists
+          if (orderedProduct.option) {
+            requestBody.data.option = orderedProduct.option.documentId || orderedProduct.option.id;
+          }
+
           const orderedProductResponse = await fetch(`${STRAPI_URL}/api/ordered-products`, {
             method: "POST",
             headers: {
               'Authorization': `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              data: {
-                quantity: orderedProduct.quantity,
-                product: orderedProduct.product?.documentId || orderedProduct.product?.id,
-              }
-            }),
+            body: JSON.stringify(requestBody),
           });
 
           if (!orderedProductResponse.ok) {
@@ -213,13 +220,18 @@ export class OrderService {
       for (const orderedProduct of orderData.ordered_products) {
         const productName = orderedProduct.product?.name || 'Produit inconnu';
         const quantity = orderedProduct.quantity || 1;
-        const price = orderedProduct.product?.price || 0;
-        const subtotal = price * quantity;
+        const basePrice = orderedProduct.product?.price || 0;
+        const optionPrice = orderedProduct.option?.priceModifier || 0;
+        const finalPrice = basePrice + optionPrice;
+        const subtotal = finalPrice * quantity;
         total += subtotal;
         
         details += `• ${productName}\n`;
+        if (orderedProduct.option) {
+          details += `  Option: ${orderedProduct.option.name} (${optionPrice >= 0 ? '+' : ''}${optionPrice.toFixed(2)} €)\n`;
+        }
         details += `  Quantité: ${quantity}\n`;
-        details += `  Prix unitaire: ${price.toFixed(2)} €\n`;
+        details += `  Prix unitaire: ${finalPrice.toFixed(2)} €\n`;
         details += `  Sous-total: ${subtotal.toFixed(2)} €\n\n`;
       }
       
@@ -242,7 +254,7 @@ export class OrderService {
     }
 
     const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
-    const response = await fetch(`${STRAPI_URL}/api/orders?populate[ordered_products][populate]=product&populate=client&filters[client][documentId][$eq]=${clientId}`, {
+    const response = await fetch(`${STRAPI_URL}/api/orders?populate[ordered_products][populate][0]=product&populate[ordered_products][populate][1]=option&populate=client&filters[client][documentId][$eq]=${clientId}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -286,7 +298,7 @@ export class OrderService {
     }
 
     const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
-    const response = await fetch(`${STRAPI_URL}/api/orders/${documentId}?populate[ordered_products][populate]=product&populate=client`, {
+    const response = await fetch(`${STRAPI_URL}/api/orders/${documentId}?populate[ordered_products][populate][0]=product&populate[ordered_products][populate][1]=option&populate=client`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -298,5 +310,161 @@ export class OrderService {
 
     const data = await response.json();
     return data.data;
+  }
+
+  /**
+   * Gets all orders for admin management
+   * @param filters - Optional filters for the orders
+   * @returns {Promise<{ data: Order[], meta: any }>} - Array of all orders with metadata
+   */
+  static async getAllOrders(filters?: {
+    done?: boolean;
+    sortBy?: 'date' | 'client' | 'total';
+    sortOrder?: 'asc' | 'desc';
+    page?: number;
+    pageSize?: number;
+  }): Promise<{ data: Order[], meta: any }> {
+    const token = AuthService.getToken();
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    
+    // Populate client with its user relation and ordered_products with their products and options
+    let queryParams = 'populate[0]=client.users_permissions_user&populate[1]=ordered_products.product&populate[2]=ordered_products.option';
+    
+    // Add filters
+    if (filters?.done !== undefined) {
+      queryParams += `&filters[done][$eq]=${filters.done}`;
+    }
+    
+    // Add sorting
+    if (filters?.sortBy) {
+      const sortField = filters.sortBy === 'date' ? 'createdAt' 
+                       : filters.sortBy === 'client' ? 'client.firstname' 
+                       : 'createdAt';
+      const sortDirection = filters.sortOrder || 'desc';
+      queryParams += `&sort=${sortField}:${sortDirection}`;
+    }
+    
+    // Add pagination
+    if (filters?.page && filters?.pageSize) {
+      queryParams += `&pagination[page]=${filters.page}&pagination[pageSize]=${filters.pageSize}`;
+    }
+
+    const response = await fetch(`${STRAPI_URL}/api/orders?${queryParams}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur lors de la récupération des commandes: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return { data: data.data || [], meta: data.meta || {} };
+  }
+
+  /**
+   * Updates an order status (done/pending)
+   * @param orderId - The order document ID
+   * @param done - Whether the order is completed
+   * @returns {Promise<Order>} - The updated order
+   */
+  static async updateOrderStatus(orderId: string, done: boolean): Promise<Order> {
+    const token = AuthService.getToken();
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    const response = await fetch(`${STRAPI_URL}/api/orders/${orderId}?populate[0]=client.users_permissions_user&populate[1]=ordered_products.product&populate[2]=ordered_products.option`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          done: done
+        }
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur lors de la mise à jour de la commande: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.data;
+  }
+
+  /**
+   * Get order statistics for admin dashboard
+   * @returns {Promise<object>} - Order statistics
+   */
+  static async getOrderStatistics(): Promise<{
+    totalOrders: number;
+    pendingOrders: number;
+    completedOrders: number;
+    totalRevenue: number;
+  }> {
+    const token = AuthService.getToken();
+    if (!token) {
+      throw new Error("Token d'authentification manquant");
+    }
+
+    const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1338';
+    
+    try {
+      // Get all orders with products and options for revenue calculation
+      const response = await fetch(`${STRAPI_URL}/api/orders?populate[0]=ordered_products.product&populate[1]=ordered_products.option`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur lors de la récupération des statistiques: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const orders = data.data || [];
+
+      const totalOrders = orders.length;
+      const pendingOrders = orders.filter((order: Order) => !order.done).length;
+      const completedOrders = orders.filter((order: Order) => order.done).length;
+      
+      // Calculate total revenue from completed orders
+      const totalRevenue = orders
+        .filter((order: Order) => order.done)
+        .reduce((total: number, order: Order) => {
+          const orderTotal = order.ordered_products?.reduce((orderSum, orderedProduct) => {
+            const basePrice = orderedProduct.product?.price || 0;
+            const optionPrice = orderedProduct.option?.priceModifier || 0;
+            const finalPrice = basePrice + optionPrice;
+            const quantity = orderedProduct.quantity || 0;
+            return orderSum + (finalPrice * quantity);
+          }, 0) || 0;
+          return total + orderTotal;
+        }, 0);
+
+      return {
+        totalOrders,
+        pendingOrders,
+        completedOrders,
+        totalRevenue
+      };
+    } catch (error) {
+      console.error('Erreur lors du calcul des statistiques:', error);
+      return {
+        totalOrders: 0,
+        pendingOrders: 0,
+        completedOrders: 0,
+        totalRevenue: 0
+      };
+    }
   }
 }

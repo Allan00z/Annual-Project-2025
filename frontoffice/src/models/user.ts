@@ -6,4 +6,10 @@ export interface User extends StrapiBase {
   provider?: string;
   confirmed: boolean;
   blocked: boolean;
+  role?: {
+    id: number;
+    name: string;
+    description: string;
+    type: string;
+  };
 }

@@ -111,24 +111,69 @@ class MailerService {
     const subject = 'Confirmation de votre commande - Audelweiss';
     const html = `
       <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333333; line-height: 1.5;">
+      <div style="text-align: center; padding: 20px 0; background-color: #ffffff; border-bottom: 3px solid #e8a499;">
+      <h1 style="color: #e8a499; font-size: 28px; margin: 0; font-weight: 600;">AUDELWEISS</h1>
+      </div>
+      
+      <div style="background-color: #ffffff; padding: 30px 20px; border-radius: 5px; margin-top: 20px;">
+      <h2 style="color: #333333; font-size: 22px; margin: 0 0 20px 0;"><strong>Merci pour votre commande !</strong></h2>
+      
+      <p><strong>Bonjour,</strong></p>
+      
+      <p><strong>Votre commande a été confirmée avec succès. Voici les détails :</strong></p>
+      <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #e8a499; margin-bottom: 20px;">
+      <pre style="margin: 0; white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 14px;"><strong>${orderDetails}</strong></pre>
+      </div>
+      <p><strong>Nous vous remercions pour votre confiance et restons à votre disposition pour toute question.</strong></p>
+      <p><strong>Vous serez tenu informé de l'évolution de votre commande par email.</strong></p>
+      
+      <p><strong>Cordialement,<br>L'équipe Audelweiss</strong></p>
+      </div>
+      
+      <div style="text-align: center; padding: 20px; color: #777777; font-size: 14px; margin-top: 20px; border-top: 1px solid #eeeeee;">
+      <p><strong>Pour toute question supplémentaire, n'hésitez pas à nous recontacter.</strong></p>
+      <p><strong>L'équipe Audelweiss</strong></p>
+      </div>
+      </div>
+    `;
+
+    return this.sendEmail({ to, subject, html });
+  }
+
+  /**
+   * Send a custom email to a client from admin panel
+   * @param to Recipient's email address
+   * @param subject Email subject
+   * @param message Custom message content
+   * @param orderId Optional order ID for reference
+   * @returns Promise with the result of the email sending
+   */
+  async sendCustomEmailToClient(to: string, subject: string, message: string, orderId?: string): Promise<nodemailer.SentMessageInfo> {
+    const html = `
+      <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333333; line-height: 1.5;">
+        <!-- En-tête avec logo stylisé -->
         <div style="text-align: center; padding: 20px 0; background-color: #ffffff; border-bottom: 3px solid #e8a499;">
           <h1 style="color: #e8a499; font-size: 28px; margin: 0; font-weight: 600;">AUDELWEISS</h1>
         </div>
         
+        <!-- Corps du mail -->
         <div style="background-color: #ffffff; padding: 30px 20px; border-radius: 5px; margin-top: 20px;">
-          <h2 style="color: #333333; font-size: 22px; margin: 0 0 20px 0;">Merci pour votre commande !</h2>
+          <h2 style="color: #333333; font-size: 22px; margin: 0 0 20px 0;">${subject}</h2>
           
-          <p>Bonjour,</p>
-          
-          <p>Votre commande a été confirmée avec succès. Voici les détails :</p>
+          ${orderId ? `
           <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #e8a499; margin-bottom: 20px;">
-            <pre style="margin: 0; white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 14px;">${orderDetails}</pre>
+            <p style="margin: 0; color: #666; font-size: 14px;">Commande concernée : #${orderId}</p>
           </div>
-          <p>Nous vous remercions pour votre confiance et restons à votre disposition pour toute question.</p>
+          ` : ''}
           
-          <p>Cordialement,<br><strong>L'équipe Audelweiss</strong></p>
+          <div style="margin: 20px 0;">
+            <div style="color: #333; white-space: pre-line;">${message}</div>
+          </div>
+          
+          <p style="margin-top: 30px;">Cordialement,<br><strong>L'équipe Audelweiss</strong></p>
         </div>
         
+        <!-- Pied de page -->
         <div style="text-align: center; padding: 20px; color: #777777; font-size: 14px; margin-top: 20px; border-top: 1px solid #eeeeee;">
           <p>Pour toute question supplémentaire, n'hésitez pas à nous recontacter.</p>
           <p><strong>L'équipe Audelweiss</strong></p>

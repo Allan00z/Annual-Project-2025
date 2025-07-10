@@ -25,6 +25,11 @@
       "relation": "manyToOne",
       "target": "api::order.order",
       "inversedBy": "ordered_products"
+    },
+    "option": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::option.option"
     }
   }
 }

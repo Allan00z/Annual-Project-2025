@@ -57,7 +57,12 @@ export default function Checkout() {
       ordered_products: cartItems
     }));
     
-    const cartTotal = cartItems.reduce((sum: number, item: OrderedProduct) => sum + ((item.product?.price ?? 0) * item.quantity), 0);
+    const cartTotal = cartItems.reduce((sum: number, item: OrderedProduct) => {
+      const basePrice = item.product?.price ?? 0;
+      const optionPrice = item.option?.priceModifier ?? 0;
+      const finalPrice = basePrice + optionPrice;
+      return sum + (finalPrice * item.quantity);
+    }, 0);
     setTotal(cartTotal);
     
     const currentUser = AuthService.getCurrentUser();
@@ -414,15 +419,26 @@ export default function Checkout() {
             <h2 className="text-xl font-semibold mb-6">Récapitulatif</h2>
             
             <div className="space-y-4">
-              {formData.ordered_products?.map((item, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <div>
-                    <p className="font-medium">{item.product?.name}</p>
-                    <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
+              {formData.ordered_products?.map((item, index) => {
+                const basePrice = item.product?.price ?? 0;
+                const optionPrice = item.option?.priceModifier ?? 0;
+                const finalPrice = basePrice + optionPrice;
+                
+                return (
+                  <div key={index} className="flex justify-between items-center">
+                    <div>
+                      <p className="font-medium">{item.product?.name}</p>
+                      {item.option && (
+                        <p className="text-sm text-gray-500">
+                          Option: {item.option.name} ({item.option.priceModifier >= 0 ? '+' : ''}{item.option.priceModifier}€)
+                        </p>
+                      )}
+                      <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
+                    </div>
+                    <p className="font-semibold">{(finalPrice * item.quantity).toFixed(2)}€</p>
                   </div>
-                  <p className="font-semibold">{((item.product?.price ?? 0) * item.quantity).toFixed(2)}€</p>
-                </div>
-              ))}
+                );
+              })}
               
               <div className="divider"></div>
               

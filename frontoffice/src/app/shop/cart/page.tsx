@@ -34,7 +34,12 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
-    const total = cart.reduce((sum, item) => sum + ((item.product?.price ?? 0) * item.quantity), 0);
+    const total = cart.reduce((sum, item) => {
+      const basePrice = item.product?.price ?? 0;
+      const optionPrice = item.option?.priceModifier ?? 0;
+      const finalPrice = basePrice + optionPrice;
+      return sum + (finalPrice * item.quantity);
+    }, 0);
     setPrice(total);
   }, [cart])
 
@@ -195,30 +200,49 @@ const ProductLine = ({item, updateCart, cart} : {item: OrderedProduct, updateCar
   const changeQuantity = (quantity: string) => {
     const newQuantity = Number(quantity);
     const updatedCart = cart.map(cartItem => 
-      cartItem.product?.name === item.product?.name ? {...cartItem, quantity: newQuantity} : cartItem
+      cartItem.product?.name === item.product?.name && cartItem.option?.documentId === item.option?.documentId 
+        ? {...cartItem, quantity: newQuantity} 
+        : cartItem
     );
     updateCart(updatedCart);
   }
 
   const deleteItem = () => {
-    const updatedCart = cart.filter(cartItem => cartItem.product?.name !== item.product?.name);
+    const updatedCart = cart.filter(cartItem => 
+      !(cartItem.product?.name === item.product?.name && cartItem.option?.documentId === item.option?.documentId)
+    );
     updateCart(updatedCart);
   }
+  
   if (!item.product) {
     return;
   }
+
+  const basePrice = item.product.price;
+  const optionPrice = item.option?.priceModifier ?? 0;
+  const finalPrice = basePrice + optionPrice;
+
   return (
     <tr>
       <td>
         <button onClick={deleteItem} className="btn btn-sm btn-error text-white text-lg">×</button>
       </td>
-      <td>{item.product.name}</td>
-      <td>{item.product.price}€</td>
+      <td>
+        <div>
+          <div className="font-medium">{item.product.name}</div>
+          {item.option && (
+            <div className="text-sm text-gray-600">
+              Option: {item.option.name} ({item.option.priceModifier >= 0 ? '+' : ''}{item.option.priceModifier}€)
+            </div>
+          )}
+        </div>
+      </td>
+      <td>{finalPrice.toFixed(2)}€</td>
       <td>
         <input type="number" className="input validator" required placeholder="Quantity" 
           min="1" value={item.quantity} onChange={(input) => changeQuantity(input.target.value)} />
       </td>
-      <td>{(item.quantity * item.product.price).toFixed(2)}€</td>
+      <td>{(item.quantity * finalPrice).toFixed(2)}€</td>
     </tr>
   )
 }

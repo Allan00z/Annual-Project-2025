@@ -28,11 +28,15 @@ export class CartService {
   /**
    * Add a product to the cart.
    * @param {any} product - The product to add to the cart.
+   * @param {any} [option] - The selected option for the product.
    * @param {number} [quantity=1] - The quantity of the product to add. Defaults to 1.
    */
-  static addToCart(product: any, quantity: number = 1): void {
+  static addToCart(product: any, option: any = null, quantity: number = 1): void {
     const existingCart = this.getCart();
-    const existingItemIndex = existingCart.findIndex(item => item.product?.documentId === product.documentId);
+    const existingItemIndex = existingCart.findIndex(item => 
+      item.product?.documentId === product.documentId && 
+      item.option?.documentId === option?.documentId
+    );
     
     if (existingItemIndex >= 0) {
       existingCart[existingItemIndex].quantity += quantity;
@@ -43,6 +47,7 @@ export class CartService {
         updatedAt: "",
         quantity: quantity,
         product: product,
+        option: option,
         documentId: ""
       });
     }
@@ -93,6 +98,11 @@ export class CartService {
    * @returns {number} The total price of items in the cart.
    */
   static getCartTotal(): number {
-    return this.getCart().reduce((total, item) => total + ((item.product?.price ?? 0) * item.quantity), 0);
+    return this.getCart().reduce((total, item) => {
+      const basePrice = item.product?.price ?? 0;
+      const optionPrice = item.option?.priceModifier ?? 0;
+      const finalPrice = basePrice + optionPrice;
+      return total + (finalPrice * item.quantity);
+    }, 0);
   }
 }

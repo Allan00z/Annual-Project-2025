@@ -654,7 +654,7 @@ export interface ApiDiscountDiscount extends Struct.CollectionTypeSchema {
       'api::discount.discount'
     > &
       Schema.Attribute.Private;
-    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    products: Schema.Attribute.Relation<'manyToMany', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
     startDate: Schema.Attribute.DateTime;
     type: Schema.Attribute.Enumeration<['prix', 'pourcentage']>;
@@ -725,7 +725,7 @@ export interface ApiOptionOption extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
     priceModifier: Schema.Attribute.Integer;
-    product: Schema.Attribute.Relation<'oneToOne', 'api::product.product'>;
+    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -748,6 +748,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    done: Schema.Attribute.Boolean;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
@@ -783,6 +784,7 @@ export interface ApiOrderedProductOrderedProduct
       'api::ordered-product.ordered-product'
     > &
       Schema.Attribute.Private;
+    option: Schema.Attribute.Relation<'oneToOne', 'api::option.option'>;
     order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
     product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
@@ -867,7 +869,10 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
-    discounts: Schema.Attribute.Relation<'oneToMany', 'api::discount.discount'>;
+    discounts: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::discount.discount'
+    >;
     feedbacks: Schema.Attribute.Relation<'oneToMany', 'api::feedback.feedback'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -876,7 +881,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
-    option: Schema.Attribute.Relation<'oneToOne', 'api::option.option'>;
+    options: Schema.Attribute.Relation<'oneToMany', 'api::option.option'>;
     ordered_products: Schema.Attribute.Relation<
       'oneToMany',
       'api::ordered-product.ordered-product'

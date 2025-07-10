@@ -27,7 +27,10 @@ export async function POST(request: NextRequest) {
 
     // Calcul total amount of the order
     const total = order.ordered_products.reduce((sum: number, item: any) => {
-      return sum + ((item.product?.price ?? 0) * item.quantity);
+      const basePrice = item.product?.price ?? 0;
+      const optionPrice = item.option?.priceModifier ?? 0;
+      const finalPrice = basePrice + optionPrice;
+      return sum + (finalPrice * item.quantity);
     }, 0);
 
     if (total <= 0) {
@@ -36,18 +39,37 @@ export async function POST(request: NextRequest) {
     }
 
     // Create line items for Stripe
-    const lineItems = order.ordered_products.map((item: any) => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: item.product?.name || 'Produit',
-          description: item.product?.description || '',
-          images: item.product?.image ? [`${process.env.NEXT_PUBLIC_STRAPI_URL}/uploads/${item.product.image}`] : [],
+    const lineItems = order.ordered_products.map((item: any) => {
+      const basePrice = item.product?.price ?? 0;
+      const optionPrice = item.option?.priceModifier ?? 0;
+      const finalPrice = basePrice + optionPrice;
+      
+      // Create product name with option if applicable
+      let productName = item.product?.name || 'Produit';
+      if (item.option?.name) {
+        productName += ` - ${item.option.name}`;
+      }
+      
+      // Create description with option details if applicable
+      let description = item.product?.description || '';
+      if (item.option?.name) {
+        const optionText = optionPrice >= 0 ? `+${optionPrice}€` : `${optionPrice}€`;
+        description += description ? ` | Option: ${item.option.name} (${optionText})` : `Option: ${item.option.name} (${optionText})`;
+      }
+      
+      return {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: productName,
+            description: description,
+            images: item.product?.image ? [`${process.env.NEXT_PUBLIC_STRAPI_URL}/uploads/${item.product.image}`] : [],
+          },
+          unit_amount: Math.round(finalPrice * 100), // Price in cents including option
         },
-        unit_amount: Math.round((item.product?.price ?? 0) * 100), // Price in cents
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      };
+    });
 
     // Prepare information for shipping and billing addresses
     const deliveryAddress = order.client?.deliveryAddress;
@@ -149,16 +171,6 @@ export async function POST(request: NextRequest) {
               currency: 'eur',
             },
             display_name: 'Livraison standard',
-            delivery_estimate: {
-              minimum: {
-                unit: 'business_day',
-                value: 2,
-              },
-              maximum: {
-                unit: 'business_day',
-                value: 5,
-              },
-            },
           },
         },
       ],
