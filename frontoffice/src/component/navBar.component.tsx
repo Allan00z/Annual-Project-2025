@@ -18,6 +18,7 @@ export const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
   const [products, setProducts] = useState<any[]>([]);
+  const { cartCount } = useCart();
 
   const fetchedProducts = async (): Promise<any[]> => {
     try {
@@ -93,6 +94,11 @@ export const NavBar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9h14l-2-9M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
             </svg>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
           </a>
 
           {isLoggedIn ? (

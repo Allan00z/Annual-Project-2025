@@ -6,12 +6,8 @@ import { useEffect, useState } from "react";
 import { OrderService } from "@/app/services/order.service";
 import AuthService from "@/app/services/auth.service";
 import { OrderedProduct } from "@/models";
-import { OrderService } from "@/app/services/order.service";
-import AuthService from "@/app/services/auth.service";
-import { OrderedProduct } from "@/models";
 
 export default function Cart() {
-  const [cart, setCart] = useState<OrderedProduct[]>([]);
   const [cart, setCart] = useState<OrderedProduct[]>([]);
   const [price, setPrice] = useState(0);
   const [promoCode, setPromoCode] = useState('');
@@ -19,9 +15,7 @@ export default function Cart() {
   const [promoError, setPromoError] = useState('');
   const [discount, setDiscount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const updateCart = (updatedCart: OrderedProduct[]) => {
   const updateCart = (updatedCart: OrderedProduct[]) => {
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
@@ -67,8 +61,6 @@ export default function Cart() {
           // Check if the product associated with the promo is in the cart
           if (promo.product) {
             const productInCart = cart.some(item => item.product?.id === promo.product.id);
-            const productInCart = cart.some(item => item.product?.id === promo.product.id);
-            console.log(productInCart);
             if (!productInCart) {
               setPromoError('Ce code promo ne s\'applique pas aux produits de votre panier');
               return;
@@ -194,20 +186,6 @@ export default function Cart() {
                     </a>
                   </div>
                 )}
-                {isLoggedIn ? (
-                  <button
-                    onClick={() => OrderService.redirectToCheckout()}
-                    className="btn bg-[#303028] text-white hover:bg-[#404038] border-none w-full mt-4 px-6 py-3 whitespace-nowrap">
-                    Procéder à la commande
-                  </button>
-                ) : (
-                  <div className="mt-4 text-center">
-                    <p className="text-sm text-gray-600 mb-2">Vous devez être connecté pour passer commande</p>
-                    <a href="/login" className="btn btn-outline btn-error w-full">
-                      Se connecter
-                    </a>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -218,27 +196,27 @@ export default function Cart() {
   );
 }
 
-const ProductLine = ({item, updateCart, cart} : {item: OrderedProduct, updateCart: (cart: OrderedProduct[]) => void, cart: OrderedProduct[]}) => {
-const ProductLine = ({item, updateCart, cart} : {item: OrderedProduct, updateCart: (cart: OrderedProduct[]) => void, cart: OrderedProduct[]}) => {
+
+const ProductLine = ({ item, updateCart, cart }: { item: OrderedProduct, updateCart: (cart: OrderedProduct[]) => void, cart: OrderedProduct[] }) => {
   const changeQuantity = (quantity: string) => {
     const newQuantity = Number(quantity);
-    const updatedCart = cart.map(cartItem => 
-      cartItem.product?.name === item.product?.name && cartItem.option?.documentId === item.option?.documentId 
-        ? {...cartItem, quantity: newQuantity} 
+    const updatedCart = cart.map(cartItem =>
+      cartItem.product?.name === item.product?.name && cartItem.option?.documentId === item.option?.documentId
+        ? { ...cartItem, quantity: newQuantity }
         : cartItem
     );
     updateCart(updatedCart);
-  }
+  };
 
   const deleteItem = () => {
-    const updatedCart = cart.filter(cartItem => 
+    const updatedCart = cart.filter(cartItem =>
       !(cartItem.product?.name === item.product?.name && cartItem.option?.documentId === item.option?.documentId)
     );
     updateCart(updatedCart);
-  }
-  
+  };
+
   if (!item.product) {
-    return;
+    return null;
   }
 
   const basePrice = item.product.price;
@@ -262,13 +240,20 @@ const ProductLine = ({item, updateCart, cart} : {item: OrderedProduct, updateCar
       </td>
       <td>{finalPrice.toFixed(2)}€</td>
       <td>
-        <input type="number" className="input validator" required placeholder="Quantity" 
-          min="1" value={item.quantity} onChange={(input) => changeQuantity(input.target.value)} />
+        <input
+          type="number"
+          className="input validator"
+          required
+          placeholder="Quantity"
+          min="1"
+          value={item.quantity}
+          onChange={(input) => changeQuantity(input.target.value)}
+        />
       </td>
       <td>{(item.quantity * finalPrice).toFixed(2)}€</td>
     </tr>
-  )
-}
+  );
+};
 
 const EmptyCart = () => {
   return (
