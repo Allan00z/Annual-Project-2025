@@ -50,6 +50,16 @@
       "relation": "manyToMany",
       "target": "api::product-category.product-category",
       "inversedBy": "products"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

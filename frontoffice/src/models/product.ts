@@ -1,4 +1,4 @@
-import { StrapiBase } from './base';
+import { StrapiBase, StrapiMedia } from './base';
 import { ProductCategory } from './product-category';
 import { Option } from './option';
 import { Discount } from './discount';
@@ -12,4 +12,11 @@ export interface Product extends StrapiBase {
   options?: Option[];
   discounts?: Discount[];
   feedbacks?: Feedback[];
+  images?: Array<StrapiMedia & {
+    formats?: {
+      thumbnail?: {
+        url: string;
+      }
+    }
+  }> | null;
 }

@@ -38,7 +38,7 @@ export default function Shop() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:1338/api/products?populate=product_categories&populate=feedbacks");
+      const response = await fetch("http://localhost:1338/api/products?populate=*");
       if (!response.ok) throw new Error("Failed to fetch products");
       const res = await response.json();
       return res.data || [];
@@ -161,7 +161,11 @@ export default function Shop() {
             {filteredProducts.map((product, i) => (
               <CardComponent
                 id={product.documentId}
-                image={product?.image}
+                image={
+                  product.images && product.images.length > 0
+                    ? "http://localhost:1338" + (product.images[0].formats?.thumbnail?.url || product.images[0].url)
+                    : undefined
+                }
                 title={product.name}
                 description={product.description}
                 price={product.price}

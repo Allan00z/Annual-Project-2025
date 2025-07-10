@@ -355,9 +355,19 @@ export default function ProductPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-muted rounded-lg h-96 flex items-center justify-center">
-          <span className="text-muted-foreground">Image du produit</span>
+        <div className="bg-muted rounded-lg min-h-96 flex items-center justify-center overflow-x-auto">
+          {product.images && product.images.length > 0 ? (
+            <img
+              src={`http://localhost:1338${product.images[0].url}`}
+              alt="Image produit"
+              className="h-72 w-auto rounded-lg object-contain border border-border bg-background shadow"
+              loading="lazy"
+            />
+          ) : (
+            <span className="text-muted-foreground">Image du produit</span>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -442,7 +452,7 @@ export default function ProductPage() {
             
             <button 
               onClick={addToCart}
-              className="w-full text-black hover:text-orange-400 bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 font-medium"
+              className="w-full hover:text-orange-400 bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 font-medium"
             >
               {added ? "✓ Ajouté !" : `Ajouter au panier - ${(finalPrice * quantity).toFixed(2)}€`}
             </button>

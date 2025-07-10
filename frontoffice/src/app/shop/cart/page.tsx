@@ -196,7 +196,6 @@ export default function Cart() {
   );
 }
 
-
 const ProductLine = ({ item, updateCart, cart }: { item: OrderedProduct, updateCart: (cart: OrderedProduct[]) => void, cart: OrderedProduct[] }) => {
   const changeQuantity = (quantity: string) => {
     const newQuantity = Number(quantity);
